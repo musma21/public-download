@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>Brick Breaker Game</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="hud">
+    <div>점수: <span id="score">0</span></div>
+    <div>레벨: <span id="level">1</span></div>
+    <div>목숨: <span id="lives">3</span></div>
+    <div class="controls">
+      <button id="btnStart">시작/재시작</button>
+      <button id="btnPause">일시정지(P)</button>
+      <button id="btnMute">음소거</button>
+    </div>
+  </div>
+  <canvas id="game" width="800" height="600" aria-label="Brick Breaker Game" role="img"></canvas>
+  <div class="overlay hidden" id="overlay">
+    <div class="panel" id="messagePanel">
+      <h2 id="messageTitle">Brick Breaker</h2>
+      <p id="messageBody">Space 또는 클릭으로 시작!</p>
+      <button id="btnCloseOverlay">닫기</button>
+    </div>
+  </div>
+  <footer>
+    <p>← → 또는 터치로 패들을 움직이세요. Space 시작, P 일시정지.</p>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
