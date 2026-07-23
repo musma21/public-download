@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agent / Graph API Governance Implementation Summary</title>
+  <style>
+    :root {
+      --ms-blue: #2563eb;
+      --ms-blue-dark: #1e40af;
+      --ms-purple: #6d28d9;
+      --ms-green: #029e73;
+      --ms-amber: #f59e0b;
+      --ms-red: #dc2626;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --bg: #f7f9fc;
+      --card: #ffffff;
+      --line: #d8dee9;
+      --soft-blue: #eef4ff;
+      --soft-green: #ecfdf5;
+      --soft-amber: #fffbeb;
+      --soft-red: #fef2f2;
+      --soft-purple: #f5f3ff;
+      --shadow: 0 8px 24px rgba(31,41,55,0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Microsoft GothicNeo", "Malgun Gothic", "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.62;
+    }
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 36px 28px 64px;
+    }
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e40af 54%, #6d28d9 100%);
+      color: #fff;
+      border-radius: 24px;
+      padding: 38px 42px;
+      box-shadow: var(--shadow);
+      margin-bottom: 26px;
+    }
+    .hero h1 {
+      margin: 0 0 14px;
+      font-size: 31px;
+      letter-spacing: -0.02em;
+      line-height: 1.24;
+    }
+    .hero p { margin: 8px 0; color: #e5e7eb; font-size: 15px; }
+    .badge-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.24);
+      color: #fff;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .toc, .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 24px 28px;
+      margin-bottom: 20px;
+    }
+    .toc h2, .card h2 {
+      font-size: 21px;
+      margin: 0 0 14px;
+      color: #111827;
+      letter-spacing: -0.01em;
+    }
+    .card h3 {
+      font-size: 17px;
+      margin: 22px 0 10px;
+      color: #111827;
+    }
+    .toc ol { margin: 8px 0 0 22px; padding: 0; }
+    .toc li { margin: 5px 0; }
+    a { color: var(--ms-blue-dark); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .summary-box {
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      padding: 16px;
+      background: #fff;
+    }
+    .summary-box strong { display: block; margin-bottom: 7px; color: #111827; }
+    .summary-box p { margin: 0; color: var(--muted); font-size: 14px; }
+    .callout {
+      border-left: 5px solid var(--ms-blue);
+      background: var(--soft-blue);
+      padding: 15px 18px;
+      border-radius: 12px;
+      margin: 16px 0;
+    }
+    .callout strong { color: #0f172a; }
+    .callout-green { border-left-color: var(--ms-green); background: var(--soft-green); }
+    .callout-amber { border-left-color: var(--ms-amber); background: var(--soft-amber); }
+    .callout-red { border-left-color: var(--ms-red); background: var(--soft-red); }
+    .callout-purple { border-left-color: var(--ms-purple); background: var(--soft-purple); }
+    ul { margin-top: 8px; }
+    li { margin: 6px 0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 18px;
+      font-size: 14px;
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      vertical-align: top;
+    }
+    th {
+      background: #f3f6fb;
+      color: #111827;
+      text-align: left;
+      font-weight: 700;
+    }
+    .pill {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .pill-green { background: #d1fae5; color: #065f46; }
+    .pill-amber { background: #fef3c7; color: #92400e; }
+    .pill-red { background: #fee2e2; color: #991b1b; }
+    .pill-blue { background: #dbeafe; color: #1e40af; }
+    .diagram {
+      display: grid;
+      gap: 10px;
+      margin: 18px 0 8px;
+    }
+    .flow-row {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      align-items: stretch;
+    }
+    .flow-card {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 14px;
+      padding: 13px 12px;
+      min-height: 92px;
+      position: relative;
+    }
+    .flow-card:after {
+      content: "→";
+      position: absolute;
+      right: -17px;
+      top: 34px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 20px;
+    }
+    .flow-card:last-child:after { content: ""; }
+    .flow-card b { display: block; margin-bottom: 6px; color: #111827; }
+    .flow-card span { color: var(--muted); font-size: 13px; }
+    .zone-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .zone {
+      border-radius: 15px;
+      padding: 16px;
+      border: 1px solid var(--line);
+    }
+    .zone h3 { margin-top: 0; }
+    .zone.green { background: var(--soft-green); }
+    .zone.amber { background: var(--soft-amber); }
+    .zone.red { background: var(--soft-red); }
+    .codebox {
+      background: #0f172a;
+      color: #e5e7eb;
+      border-radius: 14px;
+      padding: 16px 18px;
+      overflow-x: auto;
+      font-family: Consolas, Monaco, "Courier New", monospace;
+      font-size: 13px;
+      line-height: 1.55;
+      margin: 14px 0;
+      white-space: pre;
+    }
+    .customer-answer {
+      background: linear-gradient(135deg, #f8fafc 0%, #eef4ff 100%);
+      border: 1px solid #bfdbfe;
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin: 14px 0;
+      font-size: 15px;
+    }
+    .quote-title { font-weight: 800; color: #1e40af; margin-bottom: 8px; }
+    .footer {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 28px;
+      text-align: center;
+    }
+    .source-list li { margin-bottom: 8px; }
+    @media (max-width: 980px) {
+      .summary-grid, .zone-grid { grid-template-columns: 1fr; }
+      .flow-row { grid-template-columns: 1fr; }
+      .flow-card:after { content: "↓"; right: 50%; top: auto; bottom: -24px; }
+      .flow-card:last-child:after { content: ""; }
+      .hero { padding: 28px 24px; }
+      .page { padding: 22px 14px 48px; }
+    }
+    @media print {
+      body { background: #fff; }
+      .page { max-width: 100%; padding: 0; }
+      .hero, .card, .toc { box-shadow: none; break-inside: avoid; }
+      a { color: #1e40af; text-decoration: underline; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <h1>현업 Agent의 Microsoft Graph API 사용을 위한 거버넌스 및 구현 방안</h1>
+      <p><strong>고객 전달용 요약본</strong> — Microsoft Teams 고객 채팅방 질의에 대한 MS Engineer 관점의 정리</p>
+      <p>핵심 주제: Self-Service App Registration, Copilot Studio 기반 Agent/API Request Portal, Power Platform Governance, Entra Consent, ME3 기반 적용 가능성</p>
+      <div class="badge-row">
+        <span class="badge">MS Engineer 관점</span>
+        <span class="badge">Graph API Governance</span>
+        <span class="badge">Copilot Studio</span>
+        <span class="badge">Power Platform</span>
+        <span class="badge">ME3 / M365 E3 고려</span>
+      </div>
+    </section>
+
+    <section class="toc">
+      <h2>목차</h2>
+      <ol>
+        <li><a href="#exec">Executive Summary</a></li>
+        <li><a href="#problem">고객 Pain Point의 본질</a></li>
+        <li><a href="#model">권장 운영 모델</a></li>
+        <li><a href="#copilot-studio">Copilot Studio로 어떻게 구현하는가</a></li>
+        <li><a href="#me3">ME3 기반 고객 적용 가능성</a></li>
+        <li><a href="#answer">고객에게 전달할 최종 답변</a></li>
+        <li><a href="#sources">참고 공식 문서</a></li>
+      </ol>
+    </section>
+
+    <section id="exec" class="card">
+      <h2>1. Executive Summary</h2>
+      <div class="callout">
+        <strong>결론:</strong> 현업 Agent가 Graph API를 사용해야 하는 시대에, 관리자가 모든 App Registration과 권한 설정을 수작업으로 처리하는 방식은 확장성이 떨어집니다. 현실적인 대안은 <strong>Copilot Studio를 현업 Agent 개발의 Front Door로 두고, Power Platform/Entra/승인 워크플로우를 묶어 Agent/API Governance Portal 형태로 운영</strong>하는 것입니다.
+      </div>
+      <div class="summary-grid">
+        <div class="summary-box">
+          <strong>App Registration 완전 제거는 어려움</strong>
+          <p>Graph/API 접근에는 여전히 신원, 권한, 동의, 감사 체계가 필요합니다. 다만 Copilot Studio Agent는 자동 Agent ID/플랫폼 관리 모델로 수동 등록 부담을 줄일 수 있습니다.</p>
+        </div>
+        <div class="summary-box">
+          <strong>관리자 역할의 전환</strong>
+          <p>관리자가 모든 앱을 대신 등록하는 대신, 환경 정책, 허용 권한 카탈로그, DLP/Connector 정책, 승인 워크플로우를 운영하는 방식으로 전환합니다.</p>
+        </div>
+        <div class="summary-box">
+          <strong>ME3는 출발점</strong>
+          <p>ME3 기반에서도 시작은 가능하지만, 운영형/전사형 Copilot Studio 및 Graph/API 거버넌스에는 Copilot Studio/PAYG/Power Platform Premium 요소가 추가로 필요할 수 있습니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="problem" class="card">
+      <h2>2. 고객 Pain Point의 본질</h2>
+      <p>고객의 문제 제기는 단순히 “Graph API 권한을 달라”가 아닙니다. 본질은 다음과 같습니다.</p>
+      <ul>
+        <li>현업이 여러 Agent를 만들 때마다 관리자가 개별 App Registration을 만들고 권한을 수동 설정해야 하는 운영 병목</li>
+        <li>Agent 시대에 수십·수백 개의 앱 등록과 consent를 기존 방식으로 관리하기 어려운 확장성 문제</li>
+        <li>현업 속도와 보안 통제 사이의 균형 필요</li>
+        <li>메일 기반 요청이 아닌 표준화된 요청/승인/감사 프로세스 필요</li>
+      </ul>
+      <div class="callout-amber callout">
+        <strong>MS Engineer 관점:</strong> 고객의 문제 제기는 타당합니다. 다만 Graph는 조직 데이터 접근 통로이므로 완전 자율화는 위험합니다. 따라서 “무조건 관리자 수작업”도 아니고 “완전 self-service”도 아닌, 정책 기반 self-service와 승인형 통제를 결합해야 합니다.
+      </div>
+    </section>
+
+    <section id="model" class="card">
+      <h2>3. 권장 운영 모델</h2>
+      <h3>3.1 App Registration과 Consent는 분리해서 봐야 함</h3>
+      <table>
+        <thead>
+          <tr><th>구분</th><th>설명</th><th>권장 처리</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>App Registration</strong></td>
+            <td>앱의 신원, Client ID, Redirect URI, 인증 설정, API Permission 목록을 정의</td>
+            <td>Approved Maker 그룹에 제한적으로 위임</td>
+          </tr>
+          <tr>
+            <td><strong>User Consent</strong></td>
+            <td>사용자가 본인 권한 범위 내에서 앱 접근을 허용</td>
+            <td>Low-risk delegated permission에 한해 허용</td>
+          </tr>
+          <tr>
+            <td><strong>Admin Consent</strong></td>
+            <td>조직 전체 또는 고위험 권한에 대한 관리자 승인</td>
+            <td>승인 워크플로우 및 보안/개인정보 검토로 통제</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>3.2 Green / Amber / Red 분류 모델</h3>
+      <div class="zone-grid">
+        <div class="zone green">
+          <h3><span class="pill pill-green">Green</span> Self-Service 가능</h3>
+          <ul>
+            <li>Delegated permission</li>
+            <li>읽기 중심</li>
+            <li>로그인 사용자가 이미 접근 가능한 데이터</li>
+            <li>Microsoft 365 표준 커넥터 중심</li>
+            <li>개인 또는 팀 생산성 목적</li>
+          </ul>
+        </div>
+        <div class="zone amber">
+          <h3><span class="pill pill-amber">Amber</span> 빠른 승인 필요</h3>
+          <ul>
+            <li>메일, 파일, 사이트, Teams 등 민감 업무 데이터 접근</li>
+            <li>부서 단위 공유</li>
+            <li>일부 쓰기 작업</li>
+            <li>Custom connector 또는 데이터 Owner 승인 필요</li>
+          </ul>
+        </div>
+        <div class="zone red">
+          <h3><span class="pill pill-red">Red</span> 중앙 플랫폼/보안심사</h3>
+          <ul>
+            <li>Application permission</li>
+            <li>Tenant-wide access</li>
+            <li>Directory, Group, User 전역 권한</li>
+            <li>대량 Export 또는 외부 전송</li>
+            <li>중앙 Agent Gateway 권장</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>3.3 권장 아키텍처</h3>
+      <div class="diagram">
+        <div class="flow-row">
+          <div class="flow-card"><b>현업 Maker</b><span>Agent 목적, 데이터, 권한 요청 입력</span></div>
+          <div class="flow-card"><b>Request Agent / Portal</b><span>Copilot Studio, Power Apps, Teams Adaptive Card</span></div>
+          <div class="flow-card"><b>Request Store</b><span>Dataverse 또는 SharePoint List</span></div>
+          <div class="flow-card"><b>Approval Workflow</b><span>Power Automate 승인/분기</span></div>
+          <div class="flow-card"><b>Admin Control</b><span>Entra, PPAC, DLP, Consent, Audit</span></div>
+        </div>
+      </div>
+      <div class="codebox">현업 Agent
+  ↓
+Copilot Studio / Request Portal
+  ↓
+Dataverse Request Table
+  ↓
+Power Automate Approval
+  ↓
+IT / Security / Privacy Review
+  ↓
+Entra Consent · Power Platform DLP · Connector Policy · Agent Registry</div>
+    </section>
+
+    <section id="copilot-studio" class="card">
+      <h2>4. Copilot Studio로 어떻게 구현하는가</h2>
+      <div class="callout-green callout">
+        <strong>핵심:</strong> Copilot Studio는 “현업 Agent 개발 플랫폼”이자 “요청 접수 Front Door”로 적합합니다. 다만 권한 승인, 데이터 저장, DLP, Entra consent, 운영 모니터링까지 모두 Copilot Studio 단일 제품으로 처리하는 것은 아니며 Power Platform과 Entra 관리 체계를 함께 구성해야 합니다.
+      </div>
+
+      <h3>4.1 구현 구성요소</h3>
+      <table>
+        <thead>
+          <tr><th>구성요소</th><th>역할</th><th>비고</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Copilot Studio</strong></td>
+            <td>현업 Agent 개발, 요청 Agent, 표준 커넥터 기반 업무 자동화</td>
+            <td>현업 UX의 중심</td>
+          </tr>
+          <tr>
+            <td><strong>Power Platform Admin Center</strong></td>
+            <td>환경, DLP, Connector 정책, Maker 접근 제어</td>
+            <td>거버넌스의 중심</td>
+          </tr>
+          <tr>
+            <td><strong>Dataverse</strong></td>
+            <td>Agent/API 요청, 승인상태, Owner, 만료일, 감사 이력 저장</td>
+            <td>운영형이면 SharePoint List보다 적합</td>
+          </tr>
+          <tr>
+            <td><strong>Power Automate</strong></td>
+            <td>승인 워크플로우, 알림, 자동 분기</td>
+            <td>부서/IT/보안/개인정보 승인 연결</td>
+          </tr>
+          <tr>
+            <td><strong>Microsoft Entra ID</strong></td>
+            <td>App Registration, Agent ID, consent, Application Developer 역할, Conditional Access</td>
+            <td>신원/권한 통제</td>
+          </tr>
+          <tr>
+            <td><strong>Purview / Audit</strong></td>
+            <td>감사, 규정준수, 데이터 보호, eDiscovery 연계</td>
+            <td>운영 모니터링</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>4.2 환경 Zone 전략</h3>
+      <table>
+        <thead>
+          <tr><th>Zone</th><th>목적</th><th>정책</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Default Environment</strong></td>
+            <td>원칙적으로 개발 금지 또는 강한 제한</td>
+            <td>강한 DLP, 게시 제한, 외부 커넥터 제한</td>
+          </tr>
+          <tr>
+            <td><strong>Personal Dev</strong></td>
+            <td>개인 실험/학습</td>
+            <td>M365 표준 커넥터 중심, 운영 사용 금지</td>
+          </tr>
+          <tr>
+            <td><strong>Department Sandbox</strong></td>
+            <td>부서/프로젝트 Agent 개발</td>
+            <td>승인된 Maker, DLP, 테스트 데이터, 승인 워크플로우</td>
+          </tr>
+          <tr>
+            <td><strong>Production</strong></td>
+            <td>운영 Agent 배포</td>
+            <td>ALM, Owner, SLA, 감사, 비용관리, 보안승인 필수</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>4.3 Graph API 직접 호출 전 판단 기준</h3>
+      <ol>
+        <li>기존 Microsoft 365 Connector로 가능한가?</li>
+        <li>Power Automate 표준 Action으로 대체 가능한가?</li>
+        <li>Custom Connector가 필요한가?</li>
+        <li>Delegated permission으로 충분한가?</li>
+        <li>Application permission 또는 tenant-wide 권한이 필요한가?</li>
+      </ol>
+      <div class="callout-red callout">
+        <strong>원칙:</strong> Application Permission, tenant-wide access, Directory-wide access는 현업 개별 Agent에 직접 허용하기보다 중앙 Gateway 또는 별도 보안심사 대상으로 분리하는 것이 안전합니다.
+      </div>
+
+      <h3>4.4 요청 폼 필수 항목</h3>
+      <div class="codebox">Agent 이름
+Agent 목적
+사용 부서 / 대상 사용자
+필요 데이터 소스
+호출하려는 Graph API / Connector
+요청 Permission
+Delegated 또는 Application 여부
+읽기/쓰기 여부
+데이터 저장 여부
+외부 전송 여부
+운영 Owner
+만료일 / 정기 리뷰 주기
+테스트/운영 구분
+비즈니스 정당성</div>
+    </section>
+
+    <section id="me3" class="card">
+      <h2>5. ME3 기반 고객 적용 가능성</h2>
+      <div class="callout-purple callout">
+        <strong>요약:</strong> ME3 기반 고객도 시작은 가능합니다. 그러나 “전사 운영형 Copilot Studio + Graph/API Governance Portal” 전체를 ME3만으로 문제 없이 구현한다고 말하면 안 됩니다. ME3는 Safe Start의 기반이고, 운영형 확장에는 Copilot Studio/PAYG/Power Platform Premium/Dataverse/Managed Environment 등이 필요할 수 있습니다.
+      </div>
+
+      <table>
+        <thead>
+          <tr><th>영역</th><th>ME3만으로 가능성</th><th>주의사항</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Teams 중심 Classic Agent</td>
+            <td><span class="pill pill-green">가능</span></td>
+            <td>Copilot Studio for Teams 범위 내에서 제한적 사용</td>
+          </tr>
+          <tr>
+            <td>현업 요청 프로세스</td>
+            <td><span class="pill pill-green">가능</span></td>
+            <td>SharePoint List, Teams, 기본 Power Automate로 경량 시작 가능</td>
+          </tr>
+          <tr>
+            <td>Standalone Copilot Studio 전체 기능</td>
+            <td><span class="pill pill-amber">추가 필요 가능</span></td>
+            <td>Generative orchestration, premium/custom connector, 다양한 채널 배포 등은 별도 권한/용량 검토 필요</td>
+          </tr>
+          <tr>
+            <td>Premium / Custom Connector</td>
+            <td><span class="pill pill-red">ME3만으로 제한</span></td>
+            <td>Power Platform Premium 또는 Copilot Studio 관련 entitlement 검토 필요</td>
+          </tr>
+          <tr>
+            <td>Managed Environment</td>
+            <td><span class="pill pill-red">ME3만으로 제한</span></td>
+            <td>활성 사용자는 적격 standalone licence 또는 PAYG meter 필요 가능</td>
+          </tr>
+          <tr>
+            <td>전사 운영형 Agent/API Portal</td>
+            <td><span class="pill pill-amber">2단계 접근 권장</span></td>
+            <td>ME3 Safe Start 후 운영 라이선스/크레딧/거버넌스 레이어 추가</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>권장 접근</h3>
+      <div class="codebox">Phase 1: ME3 Safe Start
+- Default Environment 제한
+- Teams 중심 Classic Agent / M365 데이터 기반 시나리오부터 시작
+- 요청 접수와 승인 프로세스는 경량 구현
+- Graph direct call, custom connector, premium connector는 별도 승인 대상으로 분리
+
+Phase 2: 운영형 확장
+- Standalone Copilot Studio 또는 PAYG/credit pack 검토
+- Sandbox / Production 환경 분리
+- Dataverse 요청 테이블 구성
+- Power Automate 승인 Workflow 구성
+- Managed Environment / Premium Connector / ALM / Monitoring 적용</div>
+    </section>
+
+    <section id="answer" class="card">
+      <h2>6. 고객에게 전달할 최종 답변</h2>
+      <div class="customer-answer">
+        <div class="quote-title">권장 답변 1 — 전체 방향</div>
+        <p>네, 구현의 중심은 Copilot Studio가 맞습니다. 다만 Copilot Studio를 단순히 현업이 Agent를 만드는 도구로만 보면 부족하고, Power Platform 환경 전략, DLP/Connector 정책, Dataverse 기반 요청 저장소, Power Automate 승인 Workflow, Entra Consent, M365 Admin Center의 Agent 관리까지 묶어서 하나의 <strong>Agent/API Governance Portal</strong>로 설계해야 합니다.</p>
+      </div>
+      <div class="customer-answer">
+        <div class="quote-title">권장 답변 2 — Graph/API 권한 요청 처리</div>
+        <p>현업 Agent가 Graph API를 쓰고 싶다고 해도 먼저 Graph 직접 호출이 필요한지, 기존 Microsoft 365 Connector 또는 Power Automate Action으로 가능한지 확인하는 것이 우선입니다. 낮은 위험의 Delegated Permission은 self-service로 처리하고, 고위험 Graph 권한이나 Application Permission은 승인 워크플로우 또는 중앙 Gateway 방식으로 분리하는 것이 안전합니다.</p>
+      </div>
+      <div class="customer-answer">
+        <div class="quote-title">권장 답변 3 — ME3 고객 적용</div>
+        <p>ME3 기반 고객도 시작은 가능합니다. 다만 ME3만으로 전사형 Copilot Studio 운영 플랫폼을 완성할 수 있다고 보기는 어렵습니다. ME3로는 Teams 중심의 기본/Classic Agent와 M365 데이터 기반의 제한적 활용부터 시작하고, 전사 운영형 Agent/API 요청 포털, Custom Connector, Graph API 연동, Managed Environment, 운영 배포/승인/감사까지 포함하려면 Copilot Studio capacity 또는 PAYG, Power Platform premium capability, Dataverse/Power Automate licensing을 함께 설계해야 합니다.</p>
+      </div>
+      <div class="callout">
+        <strong>한 줄 요약:</strong> “ME3로 Safe Start는 가능하고, Copilot Studio를 Front Door로 삼되, 운영형 Graph/API Governance는 Power Platform + Entra + 승인 워크플로우 + 필요 라이선스/PAYG를 함께 설계해야 합니다.”
+      </div>
+    </section>
+
+    <section id="sources" class="card">
+      <h2>7. 참고 공식 문서</h2>
+      <ul class="source-list">
+        <li><a href="https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/delegate-app-roles" target="_blank" rel="noopener">Delegate app registration permissions in Microsoft Entra ID</a></li>
+        <li><a href="https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/configure-user-consent" target="_blank" rel="noopener">Configure how users consent to applications - Microsoft Entra ID</a></li>
+        <li><a href="https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/configure-permission-classifications" target="_blank" rel="noopener">Configure permission classifications - Microsoft Entra ID</a></li>
+        <li><a href="https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/manage-app-consent-policies" target="_blank" rel="noopener">Manage app consent policies - Microsoft Entra ID</a></li>
+        <li><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/sec-gov-phase1" target="_blank" rel="noopener">Capture governance requirements - Microsoft Copilot Studio</a></li>
+        <li><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/sec-gov-phase2" target="_blank" rel="noopener">Implement a zoned governance strategy - Microsoft Copilot Studio</a></li>
+        <li><a href="https://learn.microsoft.com/en-us/power-platform/admin/pricing-billing-skus" target="_blank" rel="noopener">Licensing overview for Microsoft Power Platform</a></li>
+        <li><a href="https://learn.microsoft.com/en-us/power-platform/admin/managed-environment-licensing" target="_blank" rel="noopener">Managed Environments licensing</a></li>
+        <li><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/requirements-licensing-subscriptions" target="_blank" rel="noopener">Get access to Copilot Studio</a></li>
+        <li><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/requirements-messages-management" target="_blank" rel="noopener">Copilot Studio message and billing management</a></li>
+      </ul>
+      <p class="footer">Prepared for customer discussion. This document is a customer-facing summary of the discussion and should be validated against the customer’s exact licensing agreement, tenant configuration, security policy, and current Microsoft licensing terms before final design.</p>
+    </section>
+  </main>
+</body>
+</html>
