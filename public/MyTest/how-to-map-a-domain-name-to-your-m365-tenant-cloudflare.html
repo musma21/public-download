@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to map a domain name to your M365 tenant (Cloudflare)</title>
+<style>
+  :root{
+    --navy:#0f2a5f;
+    --navy-soft:#1b3f8b;
+    --ink:#1a1a1a;
+    --muted:#5b6472;
+    --line:#e3e7ee;
+    --bg:#f6f8fc;
+    --warn-bg:#fff6e5;
+    --warn-line:#f0b429;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Microsoft GothicNeo","MicrosoftGothicNeo","Malgun Gothic","Segoe UI",sans-serif;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:56px 24px 40px}
+  header.doc{border-bottom:3px solid var(--navy);padding-bottom:22px;margin-bottom:34px}
+  .eyebrow{
+    font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--navy-soft);font-weight:700;margin-bottom:10px;
+  }
+  h1{font-size:34px;line-height:1.25;margin:0 0 12px;color:var(--navy);font-weight:800;letter-spacing:-.01em}
+  .subtitle{margin:0;color:var(--muted);font-size:16px}
+  .meta{margin-top:16px;font-size:13px;color:var(--muted)}
+  .meta span{display:inline-block;margin-right:18px}
+
+  section{background:#fff;border:1px solid var(--line);border-radius:12px;padding:26px 28px;margin-bottom:22px}
+  h2{font-size:20px;color:var(--navy);margin:0 0 6px;font-weight:700}
+  h2 .num{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;
+    font-size:14px;margin-right:10px;vertical-align:2px;
+  }
+  h3{font-size:15px;margin:22px 0 8px;color:var(--navy-soft);font-weight:700}
+  p{margin:10px 0}
+  ul,ol{margin:10px 0 10px 20px;padding:0}
+  li{margin:6px 0}
+  code{
+    background:#eef2f9;border:1px solid #dde4f0;border-radius:4px;
+    padding:1px 6px;font-family:Consolas,"Courier New",monospace;font-size:13px;color:#123;
+  }
+  a{color:var(--navy-soft)}
+
+  .callout{
+    background:var(--warn-bg);border-left:4px solid var(--warn-line);
+    border-radius:6px;padding:14px 18px;margin:18px 0;font-size:15px;
+  }
+  .callout strong{color:#8a5b00}
+  .note{
+    background:#eef3fb;border-left:4px solid var(--navy-soft);
+    border-radius:6px;padding:14px 18px;margin:18px 0;font-size:15px;
+  }
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+  th{background:#f0f4fb;color:var(--navy);font-weight:700}
+  td code{white-space:nowrap}
+
+  figure{margin:20px 0}
+  .shot{
+    border:1px solid #cdd6e5;border-radius:10px;overflow:hidden;
+    box-shadow:0 6px 20px rgba(15,42,95,.08);background:#fff;
+  }
+  .shot .bar{
+    background:#243a5e;color:#fff;font-size:12px;padding:8px 14px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .shot .bar .dot{width:9px;height:9px;border-radius:50%;background:#8fa3c4;display:inline-block}
+  .shot .body{padding:18px 20px;font-size:13.5px;color:#2c3444}
+  .shot .field{
+    border:1px solid #c9d2e2;border-radius:5px;padding:9px 12px;margin:8px 0;
+    background:#fbfcfe;color:#40485a;
+  }
+  .shot .btn{
+    display:inline-block;background:var(--navy-soft);color:#fff;border-radius:4px;
+    padding:7px 18px;font-size:13px;margin-top:10px;
+  }
+  .shot .btn.ghost{background:#fff;color:var(--navy-soft);border:1px solid var(--navy-soft);margin-left:8px}
+  figcaption{font-size:12.5px;color:var(--muted);margin-top:8px;font-style:italic}
+
+  .checklist li{list-style:none;position:relative;padding-left:26px}
+  .checklist li:before{
+    content:"";position:absolute;left:0;top:7px;width:14px;height:14px;
+    border:2px solid var(--navy-soft);border-radius:3px;
+  }
+  .checklist{margin-left:0}
+
+  footer.doc{
+    margin-top:34px;padding-top:14px;border-top:1px solid var(--line);
+    font-size:10.5px;color:#8b93a1;display:flex;align-items:center;gap:7px;
+  }
+  footer.doc svg{flex:none}
+  footer.doc .sep{color:#c2c8d2}
+  @media print{
+    body{background:#fff}
+    section{break-inside:avoid;box-shadow:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="doc">
+    <div class="eyebrow">Tech Notes · Microsoft 365</div>
+    <h1>How to map a domain name to your M365 tenant (Cloudflare)</h1>
+    <p class="subtitle">A step-by-step guide to adding and verifying a custom domain in the Microsoft 365 admin center when DNS is hosted at Cloudflare.</p>
+    <div class="meta">
+      <span><strong>Audience:</strong> Tenant administrators</span>
+      <span><strong>Time required:</strong> ~15 minutes (plus DNS propagation)</span>
+    </div>
+  </header>
+
+  <section>
+    <h2>Before you start</h2>
+    <p>You need both of the following levels of access. Without either one, the verification step cannot be completed.</p>
+    <ul class="checklist">
+      <li><strong>Global Administrator</strong> in the Microsoft 365 admin center for the target tenant.</li>
+      <li><strong>Domain management rights</strong> for the domain at <a href="https://cloudflare.com">Cloudflare.com</a> (the account where the zone lives).</li>
+    </ul>
+
+    <div class="callout">
+      <strong>⚠️ Important —</strong> if the domain name you want to use is <em>already in use by another Microsoft 365 tenant</em>, you must first sign in to that previous tenant as an administrator and remove the domain there. A domain can only be verified in one tenant at a time; skipping this step will cause the add-domain step below to fail.
+    </div>
+
+    <h3>Quick pre-flight check</h3>
+    <ul>
+      <li>Confirm the domain's nameservers actually point to Cloudflare (Cloudflare must be authoritative for DNS, not just a registrar).</li>
+      <li>Note any existing MX, SPF, or CNAME records — Microsoft 365 will ask to add records that may conflict with an existing mail provider.</li>
+      <li>Decide whether you want Microsoft to manage records for you or to add them manually (this guide uses the guided/verify flow).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="num">1</span>Add the domain in the Microsoft 365 admin center</h2>
+    <p>Sign in to the Microsoft 365 admin center, then go to <code>Settings</code> → <code>Domains</code> and select <strong>Add domain</strong>. Enter the domain name exactly as registered (for example <code>contoso.com</code>, without <code>www.</code>) and continue.</p>
+
+    <figure>
+      <div class="shot">
+        <div class="bar"><span class="dot"></span> Microsoft 365 admin center — Settings › Domains › Add domain</div>
+        <div class="body">
+          <div style="font-weight:700;color:var(--navy);margin-bottom:4px">Add a domain</div>
+          <div style="color:var(--muted);font-size:12.5px">Enter a domain you already own. We'll walk you through verifying it.</div>
+          <div class="field">Domain name &nbsp;|&nbsp; <span style="color:#8a93a4">yourdomain.com</span></div>
+          <span class="btn">Use this domain</span><span class="btn ghost">Cancel</span>
+        </div>
+      </div>
+      <figcaption>Screenshot reference — the Add domain dialog in Settings › Domains.</figcaption>
+    </figure>
+
+    <div class="note">
+      If the portal reports that the domain is already in use, return to the warning above: the domain is still attached to another tenant and must be removed there first.
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">2</span>Verify ownership through Cloudflare</h2>
+    <p>Microsoft 365 offers to verify the domain by connecting directly to your DNS host. When Cloudflare is detected, choose the sign-in option and press <strong>Verify</strong> — you will be redirected to Cloudflare to authenticate and to authorise Microsoft to create the verification record.</p>
+
+    <figure>
+      <div class="shot">
+        <div class="bar"><span class="dot"></span> Verify domain ownership — Sign in to Cloudflare</div>
+        <div class="body">
+          <div style="font-weight:700;color:var(--navy);margin-bottom:4px">Verify your domain</div>
+          <div style="color:var(--muted);font-size:12.5px">We detected that your DNS is hosted at Cloudflare. Sign in to add the verification record automatically.</div>
+          <div class="field">☁️ Cloudflare — sign in and authorise</div>
+          <span class="btn">Verify</span><span class="btn ghost">Add a TXT record instead</span>
+        </div>
+      </div>
+      <figcaption>Screenshot reference — sign in to Cloudflare and press "Verify" to continue.</figcaption>
+    </figure>
+
+    <h3>If you prefer to verify manually</h3>
+    <p>Instead of connecting the accounts, you can add the verification record yourself in the Cloudflare DNS tab:</p>
+    <table>
+      <tr><th>Type</th><th>Name</th><th>Value</th><th>Proxy status</th></tr>
+      <tr><td><code>TXT</code></td><td><code>@</code></td><td><code>MS=msXXXXXXXX</code> (value shown in the portal)</td><td>DNS only</td></tr>
+    </table>
+    <p>Save the record, wait a minute or two, then return to the admin center and select <strong>Verify</strong> again.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">3</span>Add the Microsoft 365 service records</h2>
+    <p>Once ownership is confirmed, the portal lists the DNS records required for the services you use. Add them in Cloudflare's DNS tab. The typical set is:</p>
+    <table>
+      <tr><th>Purpose</th><th>Type</th><th>Host / Name</th><th>Points to</th></tr>
+      <tr><td>Exchange Online mail flow</td><td><code>MX</code></td><td><code>@</code></td><td><code>&lt;domain-key&gt;.mail.protection.outlook.com</code> (priority 0)</td></tr>
+      <tr><td>Autodiscover</td><td><code>CNAME</code></td><td><code>autodiscover</code></td><td><code>autodiscover.outlook.com</code></td></tr>
+      <tr><td>SPF (anti-spam)</td><td><code>TXT</code></td><td><code>@</code></td><td><code>v=spf1 include:spf.protection.outlook.com -all</code></td></tr>
+      <tr><td>Teams / Skype federation</td><td><code>CNAME</code></td><td><code>sip</code>, <code>lyncdiscover</code></td><td><code>sipdir.online.lync.com</code>, <code>webdir.online.lync.com</code></td></tr>
+      <tr><td>Teams SRV</td><td><code>SRV</code></td><td><code>_sip._tls</code>, <code>_sipfederationtls._tcp</code></td><td>As listed in the admin center</td></tr>
+    </table>
+
+    <div class="callout">
+      <strong>Cloudflare tip —</strong> set the proxy status of every Microsoft 365 record to <strong>DNS only</strong> (grey cloud). Records left in proxied mode (orange cloud) break mail flow and service discovery, because Cloudflare returns its own IP addresses instead of Microsoft's.
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">4</span>Finish and validate</h2>
+    <ol>
+      <li>Back in the admin center, complete the wizard and let Microsoft run its DNS check. Records may take a few minutes to propagate.</li>
+      <li>Confirm the domain now shows as <strong>Healthy</strong> under <code>Settings</code> → <code>Domains</code>.</li>
+      <li>Assign the new domain to a user or group as the primary email address, then send a test message in and out.</li>
+      <li>If you migrated from another mail provider, remove the old MX and SPF entries so mail is not split between systems.</li>
+    </ol>
+
+    <h3>Troubleshooting</h3>
+    <ul>
+      <li><strong>"Domain is already in use"</strong> — remove it from the previous tenant first, then retry.</li>
+      <li><strong>Verification keeps failing</strong> — check that the TXT record is on the root (<code>@</code>) and set to DNS only; use a public DNS lookup to confirm it is visible externally.</li>
+      <li><strong>Mail is not delivered</strong> — an orange-cloud (proxied) MX record or a leftover MX from the old provider is the usual cause.</li>
+      <li><strong>Teams sign-in issues</strong> — confirm the SRV records were saved with the correct port and priority values.</li>
+    </ul>
+  </section>
+
+  <footer class="doc">
+    <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="6" fill="#8b93a1"/><path d="M7 17V7h5.2a3.1 3.1 0 0 1 1.1 6 3.3 3.3 0 0 1-.7 6.4H7z" fill="#fff" transform="translate(0,-1.6) scale(1,0.86)"/></svg>
+    <span>Tech Notes</span><span class="sep">/</span><span>M365</span><span class="sep">/</span><span>How to map a domain name to your M365 tenant (Cloudflare)</span>
+  </footer>
+
+</div>
+</body>
+</html>
