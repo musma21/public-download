@@ -198,8 +198,8 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
         <li><span class="num">STEP 4</span><a href="#st4">Azure 구독 연결 (과금)</a></li>
         <li><span class="num">STEP 5</span><a href="#st5">Entra EMU 앱 · 추가</a></li>
         <li><span class="num">STEP 6</span><a href="#st6">Entra EMU 앱 · SAML SSO</a></li>
-        <li><span class="num">STEP 7</span><a href="#st7">Entra EMU 앱 · 사용자·그룹 할당</a></li>
-        <li><span class="num">STEP 8</span><a href="#st8">SAML SSO · GitHub 적용</a></li>
+        <li><span class="num">STEP 7</span><a href="#st7">SAML SSO · GitHub 적용</a></li>
+        <li><span class="num">STEP 8</span><a href="#st8">Entra EMU 앱 · 사용자·그룹 할당</a></li>
         <li><span class="num">STEP 9</span><a href="#st9">SCIM 프로비저닝 설정</a></li>
         <li><span class="num">STEP 10</span><a href="#st10">User/Group 프로비저닝 활성화</a></li>
         <li><span class="num">STEP 11</span><a href="#st11">GitHub 사용자 생성 확인</a></li>
@@ -217,7 +217,7 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
     <p>2026년 6월 1일부로 GitHub Copilot이 <b>사용량 기반(Usage-based / AI Credit) 과금</b>으로 전환됨에 따라, 기존의 ‘트라이얼 기반 평가’ 방식보다는 <b>Production EMU Enterprise를 생성하고 Azure 구독을 직접 연결하는 방식</b>을 권장합니다.</p>
 
     <h3 class="sub" id="s11">1.1 전체 구축 흐름</h3>
-    <div class="flow"><div class="fi gh"><span class="n">1</span>EMU Enterprise 생성</div><span class="arrow">→</span><div class="fi gh"><span class="n">2</span>셋업 계정 암호 설정</div><span class="arrow">→</span><div class="fi gh"><span class="n">3</span>Azure 구독 연결 (과금)</div><span class="arrow">→</span><div class="fi gh"><span class="n">4</span>SCIM Token 생성</div><span class="arrow">→</span><div class="fi az"><span class="n">5</span>Entra 앱 추가</div><span class="arrow">→</span><div class="fi az"><span class="n">6</span>SAML SSO 설정 (Entra)</div><span class="arrow">→</span><div class="fi az"><span class="n">7</span>사용자·그룹 할당</div><span class="arrow">→</span><div class="fi gh"><span class="n">8</span>GitHub SAML 적용 + Test</div><span class="arrow">→</span><div class="fi az"><span class="n">9</span>SCIM 프로비저닝 설정</div><span class="arrow">→</span><div class="fi az"><span class="n">10</span>User/Group 프로비저닝 On</div><span class="arrow">→</span><div class="fi gh"><span class="n">11</span>사용자 생성 확인</div><span class="arrow">→</span><div class="fi gh"><span class="n">12</span>Organization·Team 생성</div><span class="arrow">→</span><div class="fi gh"><span class="n">13</span>Billing·Licensing (Copilot 활성화)</div><span class="arrow">→</span><div class="fi gh"><span class="n">14</span>Copilot 초기 정책 설정</div><span class="arrow">→</span><div class="fi gh"><span class="n">15</span>Budget 설정</div></div>
+    <div class="flow"><div class="fi gh"><span class="n">1</span>EMU Enterprise 생성</div><span class="arrow">→</span><div class="fi gh"><span class="n">2</span>셋업 계정 암호 설정</div><span class="arrow">→</span><div class="fi gh"><span class="n">3</span>Azure 구독 연결 (과금)</div><span class="arrow">→</span><div class="fi gh"><span class="n">4</span>SCIM Token 생성</div><span class="arrow">→</span><div class="fi az"><span class="n">5</span>Entra 앱 추가</div><span class="arrow">→</span><div class="fi az"><span class="n">6</span>SAML SSO 설정 (Entra)</div><span class="arrow">→</span><div class="fi gh"><span class="n">7</span>GitHub SAML 적용 + Test</div><span class="arrow">→</span><div class="fi az"><span class="n">8</span>사용자·그룹 할당</div><span class="arrow">→</span><div class="fi az"><span class="n">9</span>SCIM 프로비저닝 설정</div><span class="arrow">→</span><div class="fi az"><span class="n">10</span>User/Group 프로비저닝 On</div><span class="arrow">→</span><div class="fi gh"><span class="n">11</span>사용자 생성 확인</div><span class="arrow">→</span><div class="fi gh"><span class="n">12</span>Organization·Team 생성</div><span class="arrow">→</span><div class="fi gh"><span class="n">13</span>Billing·Licensing (Copilot 활성화)</div><span class="arrow">→</span><div class="fi gh"><span class="n">14</span>Copilot 초기 정책 설정</div><span class="arrow">→</span><div class="fi gh"><span class="n">15</span>Budget 설정</div></div>
 
     <!-- 2. 사전 준비 -->
     <h2 class="sec" id="s2">2. 사전 준비 (Prerequisites)</h2>
@@ -407,7 +407,7 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
           <tr><td>Reply URL (ACS)</td><td>https://github.com/enterprises/&lt;slug&gt;/saml/consume</td></tr>
           <tr><td>Sign on URL</td><td>https://github.com/enterprises/&lt;slug&gt;/sso</td></tr>
         </table>
-        <div class="lbl">위 저장 후 기록해둘 값 <span style="text-transform:none;font-weight:600;color:var(--muted)">(GitHub EMU Admin 입력에 사용 → STEP 8)</span></div>
+        <div class="lbl">위 저장 후 기록해둘 값 <span style="text-transform:none;font-weight:600;color:var(--muted)">(GitHub EMU Admin 입력에 사용 → STEP 7)</span></div>
         <ul class="plain">
           <li><b>Login URL</b></li>
           <li><b>Microsoft Entra Identifier</b></li>
@@ -425,34 +425,10 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
       </div>
     </section>
 
-    <!-- STEP 7 (사용자/그룹 할당) -->
+    <!-- STEP 7 (SAML 적용) -->
     <section class="step" id="st7">
       <div class="head">
         <div class="badge"><span class="k">STEP</span><span class="v">7</span></div>
-        <div class="htext"><div class="t">Entra EMU 앱 · 사용자 및 그룹 할당</div></div>
-        <span class="role az">작업자 · Entra Admin</span>
-      </div>
-      <div class="content">
-        <div class="lbl">작업 위치</div>
-        <div class="pathbox">Entra ID → Enterprise apps → GitHub Enterprise Managed User
-→ Users and groups → Add user/group</div>
-        <div class="lbl">작업 절차</div>
-        <ol class="proc">
-          <li>먼저 해당 GitHub EMU를 관리할 <b>Entra 사용자</b> 추가 — Role: <b>Enterprise Owner</b> 선택 후 할당<br>
-            <span style="color:var(--muted)">이 계정은 STEP 8의 <b>Test SAML Configuration</b> 로그인에 사용됩니다. (권장) 운영 시 <span class="inline">GH-Enterprise-Owners</span> 등 보안 그룹 기반 관리</span></li>
-          <li>GitHub으로 자동 프로비저닝할 <b>보안 그룹</b>을 선택하여 추가 — Role: <b>Users</b></li>
-        </ol>
-        <div class="lbl">공식 문서</div>
-        <ul class="docs">
-          <li><a href="https://learn.microsoft.com/en-us/entra/identity/saas-apps/github-enterprise-managed-user-tutorial#assign-the-microsoft-entra-test-user">Assign the Microsoft Entra test user</a></li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- STEP 8 (SAML 적용) -->
-    <section class="step" id="st8">
-      <div class="head">
-        <div class="badge"><span class="k">STEP</span><span class="v">8</span></div>
         <div class="htext"><div class="t">Entra EMU 앱 · SAML SSO — GitHub 적용</div></div>
         <span class="role gh">작업자 · GitHub EMU Admin</span>
       </div>
@@ -482,6 +458,30 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
         <div class="lbl">공식 문서</div>
         <ul class="docs">
           <li><a href="https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/configuring-authentication-for-enterprise-managed-users/configuring-saml-single-sign-on-for-enterprise-managed-users">Configuring SAML SSO for Enterprise Managed Users</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- STEP 8 (사용자/그룹 할당) -->
+    <section class="step" id="st8">
+      <div class="head">
+        <div class="badge"><span class="k">STEP</span><span class="v">8</span></div>
+        <div class="htext"><div class="t">Entra EMU 앱 · 사용자 및 그룹 할당</div></div>
+        <span class="role az">작업자 · Entra Admin</span>
+      </div>
+      <div class="content">
+        <div class="lbl">작업 위치</div>
+        <div class="pathbox">Entra ID → Enterprise apps → GitHub Enterprise Managed User
+→ Users and groups → Add user/group</div>
+        <div class="lbl">작업 절차</div>
+        <ol class="proc">
+          <li>먼저 해당 GitHub EMU를 관리할 <b>Entra 사용자</b> 추가 — Role: <b>Enterprise Owner</b> 선택 후 할당<br>
+            <span style="color:var(--muted)">이 계정은 STEP 7의 <b>Test SAML Configuration</b> 로그인에 사용됩니다. (권장) 운영 시 <span class="inline">GH-Enterprise-Owners</span> 등 보안 그룹 기반 관리</span></li>
+          <li>GitHub으로 자동 프로비저닝할 <b>보안 그룹</b>을 선택하여 추가 — Role: <b>Users</b></li>
+        </ol>
+        <div class="lbl">공식 문서</div>
+        <ul class="docs">
+          <li><a href="https://learn.microsoft.com/en-us/entra/identity/saas-apps/github-enterprise-managed-user-tutorial#assign-the-microsoft-entra-test-user">Assign the Microsoft Entra test user</a></li>
         </ul>
       </div>
     </section>
@@ -581,7 +581,7 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
           <li>최초 조직(Organization) 생성</li>
           <li>생성한 조직으로 이동 (Organizations → 생성한 조직 클릭)</li>
           <li>상단 메뉴 <b>Teams</b> 선택 → 최초 팀(Team) 생성</li>
-          <li>Entra 보안 그룹과 연동할 Team을 원하면 <b>Identity Provider Group</b>에서 보안 그룹 선택 <span style="color:var(--muted)">(단, 이 보안 그룹은 STEP 7에서 Entra EMU 앱의 사용자·그룹에 추가된 그룹이어야 함)</span></li>
+          <li>Entra 보안 그룹과 연동할 Team을 원하면 <b>Identity Provider Group</b>에서 보안 그룹 선택 <span style="color:var(--muted)">(단, 이 보안 그룹은 STEP 8에서 Entra EMU 앱의 사용자·그룹에 추가된 그룹이어야 함)</span></li>
           <li>상단 메뉴 <b>Repositories</b> 선택 → 최초 레포(Repository) 생성</li>
           <li>생성 후 <b>“Add teams and collaborators”</b> 버튼으로 레포를 사용할 사용자·팀을 선택</li>
         </ol>
