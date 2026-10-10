@@ -1,0 +1,548 @@
+<!DOCTYPE html><html lang="ko" data-theme="dark"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>원룸 빌라 전세 리스크 비교</title>
+<style>
+/* ===========================================================
+   1. THEME TOKENS — DARK (default) + BRIGHT
+   =========================================================== */
+:root{
+  --page-bg:#05070A;
+  --doc-bg:#0E1116;
+  --panel:#161C25;
+  --line:#242C39;
+  --line-soft:#1C232E;
+
+  --fg:#F1ECE3;
+  --fg-2:#C6CDD8;
+  --mut:#8B95A6;
+  --dim:#5F6879;
+
+  --A:#F2B138;
+  --B:#7BD3E8;
+  --C:#4C8DF0;
+  --D:#46C08D;
+
+  --wash-1:rgba(76,169,240,.13);
+  --wash-2:rgba(169,139,240,.09);
+  --dots:rgba(255,255,255,.05);
+  --mark:rgba(76,169,240,.32);
+
+  /* MANDATORY FONT — Microsoft GothicNeo everywhere */
+  --ko:'Microsoft GothicNeo','MS Gothic Neo','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  --la:'Microsoft GothicNeo','MS Gothic Neo','Apple SD Gothic Neo','Segoe UI',sans-serif;
+  --mo:'Microsoft GothicNeo','MS Gothic Neo','Apple SD Gothic Neo','Segoe UI',sans-serif;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+html[data-theme="light"]{
+  --page-bg:#E7E4DD;
+  --doc-bg:#FBFAF7;
+  --panel:#FFFFFF;
+  --line:#D8D3C9;
+  --line-soft:#E6E2D9;
+
+  --fg:#14181F;
+  --fg-2:#39414E;
+  --mut:#6B7484;
+  --dim:#98A0AE;
+
+  --A:#B77B05;
+  --B:#1E7F9B;
+  --C:#1D5FCB;
+  --D:#1C8A5D;
+
+  --wash-1:rgba(29,95,203,.09);
+  --wash-2:rgba(91,69,196,.07);
+  --dots:rgba(0,0,0,.05);
+  --mark:rgba(29,95,203,.20);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:var(--page-bg);}
+body{
+  min-height:100%;
+  font-family:var(--ko);
+  color:var(--fg-2);
+  -webkit-font-smoothing:antialiased;
+  background:
+    radial-gradient(1100px 600px at 14% 2%,var(--wash-1),transparent 62%),
+    radial-gradient(820px 480px at 94% 96%,var(--wash-2),transparent 60%),
+    radial-gradient(circle,var(--dots) 1px,transparent 1px) 0 0/34px 34px,
+    var(--page-bg);
+  background-attachment:fixed;
+  transition:background-color .35s var(--ease),color .35s var(--ease);
+}
+img,svg{max-width:100%;}
+
+/* ===========================================================
+   2. DOCUMENT FRAME
+   =========================================================== */
+.doc{max-width:1080px;margin:0 auto;padding:56px 40px 96px;}
+
+.chrome{display:flex;justify-content:space-between;align-items:center;gap:24px;
+  padding-bottom:16px;border-bottom:1px solid var(--line);}
+.chrome b{font-family:var(--mo);font-weight:700;font-size:13px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--fg);}
+.chrome i{font-style:normal;font-family:var(--mo);font-size:12px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--mut);text-align:right;}
+
+.kick{display:flex;align-items:center;gap:12px;font-family:var(--mo);font-size:12px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--mut);margin-top:44px;}
+.kick s{width:36px;height:3px;background:var(--B);display:inline-block;text-decoration:none;}
+
+h1{font-family:var(--ko);font-weight:700;font-size:38px;line-height:1.18;
+  letter-spacing:-.03em;color:var(--fg);margin-top:16px;}
+h1 u{text-decoration:none;background:linear-gradient(transparent 74%,var(--mark) 74%);}
+.en{font-family:var(--la);font-weight:800;font-size:18px;letter-spacing:-.01em;color:var(--mut);
+  text-transform:uppercase;margin-top:14px;}
+.lede{font-family:var(--ko);font-weight:300;font-size:20px;line-height:1.66;color:var(--fg-2);
+  margin-top:18px;max-width:820px;}
+.lede b{font-weight:600;color:var(--fg);}
+.spine{height:5px;border-radius:3px;margin-top:26px;background:var(--C);width:180px;}
+
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:34px;}
+.cell{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:18px 22px;}
+.label{font-family:var(--mo);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--mut);}
+.cell .v{font-family:var(--ko);font-weight:700;font-size:20px;line-height:1.3;color:var(--fg);
+  margin-top:8px;letter-spacing:-.02em;}
+
+/* ===========================================================
+   2b. TABLE OF CONTENTS + BACK-TO-TOC LINK
+   =========================================================== */
+.toc{background:var(--panel);border:1px solid var(--line);border-radius:4px;
+  padding:22px 26px;margin-top:34px;}
+.toc-list{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:2px;}
+.toc-list li{font-family:var(--ko);font-size:16px;line-height:1.5;}
+.toc-list a{display:flex;align-items:baseline;gap:10px;padding:7px 0;color:var(--fg-2);
+  font-weight:500;text-decoration:none;border-bottom:1px solid var(--line-soft);}
+.toc-list li:last-child a{border-bottom:none;}
+.toc-list .n{flex:none;font-family:var(--mo);font-weight:800;font-size:13px;
+  color:var(--C);min-width:20px;}
+.toc-list a:hover{color:var(--C);}
+.toc-list a:hover .n{color:var(--C);}
+.toc-back{margin-top:34px;padding-top:14px;border-top:1px solid var(--line);text-align:right;}
+.toc-back a{font-family:var(--mo);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--mut);text-decoration:none;border-bottom:none;font-weight:700;}
+.toc-back a:hover{color:var(--C);}
+@media print{.toc-back{display:none;}}
+
+/* ===========================================================
+   3. SECTIONS
+   =========================================================== */
+section{margin-top:56px;}
+h2{font-family:var(--ko);font-weight:700;font-size:32px;line-height:1.2;letter-spacing:-.03em;
+  color:var(--fg);display:flex;align-items:center;gap:14px;
+  padding-bottom:14px;border-bottom:1px solid var(--line);}
+h2 .num{flex:none;width:34px;height:34px;border-radius:50%;border:1.5px solid var(--C);color:var(--C);
+  font-family:var(--la);font-weight:800;font-size:16px;
+  display:inline-flex;align-items:center;justify-content:center;letter-spacing:0;}
+h3{font-family:var(--ko);font-weight:600;font-size:19px;letter-spacing:-.02em;color:var(--fg);
+  margin:32px 0 10px;}
+p{font-family:var(--ko);font-weight:300;font-size:18px;line-height:1.72;color:var(--fg-2);margin-top:14px;}
+p b,li b,td b{font-weight:600;color:var(--fg);}
+ul,ol{margin:14px 0 0 22px;}
+li{font-family:var(--ko);font-weight:300;font-size:18px;line-height:1.7;color:var(--fg-2);margin:8px 0;}
+a{color:var(--C);text-decoration:none;border-bottom:1px solid var(--line);}
+a:hover{border-bottom-color:var(--C);}
+code{font-family:var(--mo);font-size:15px;background:var(--panel);border:1px solid var(--line);
+  border-radius:3px;padding:1px 7px;color:var(--B);white-space:nowrap;}
+
+.checklist{list-style:none;margin-left:0;}
+.checklist li{position:relative;padding-left:30px;}
+.checklist li:before{content:"";position:absolute;left:0;top:9px;width:14px;height:14px;
+  border:1.5px solid var(--D);border-radius:3px;}
+
+/* ===========================================================
+   4. CALLOUTS
+   =========================================================== */
+.note{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--C);
+  border-radius:4px;padding:18px 24px;margin-top:22px;}
+.note.warn{border-left-color:var(--A);}
+.note .label{margin-bottom:6px;color:var(--C);}
+.note.warn .label{color:var(--A);}
+.note p{margin-top:4px;font-size:17px;}
+
+/* ===========================================================
+   5. TABLES
+   =========================================================== */
+.tblwrap{margin-top:20px;overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+th{font-family:var(--mo);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--mut);
+  text-align:left;padding:0 16px 12px;border-bottom:1px solid var(--line);font-weight:400;white-space:nowrap;}
+td{font-family:var(--ko);font-weight:400;font-size:16px;color:var(--fg-2);padding:16px;
+  border-bottom:1px solid var(--line-soft);vertical-align:top;letter-spacing:-.01em;}
+
+/* ===========================================================
+   6. FIGURES — screenshot frames
+   =========================================================== */
+figure.fig{margin-top:22px;background:var(--panel);border:1px solid var(--line);
+  border-radius:4px;overflow:hidden;}
+.fig .bar{display:flex;align-items:center;gap:10px;padding:10px 16px;
+  border-bottom:1px solid var(--line);font-family:var(--mo);font-size:12px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--mut);}
+.fig .bar s{width:9px;height:9px;border-radius:50%;background:var(--dim);display:inline-block;
+  text-decoration:none;flex:none;}
+.fig .body{padding:22px 24px;}
+.fig .body .t{font-family:var(--ko);font-weight:600;font-size:18px;color:var(--fg);}
+.fig .body .s{font-family:var(--ko);font-weight:300;font-size:15px;color:var(--mut);
+  text-decoration:none;display:block;margin-top:4px;}
+.fig .field{border:1px solid var(--line);border-radius:4px;padding:11px 14px;margin-top:14px;
+  font-family:var(--ko);font-size:15px;color:var(--mut);background:var(--doc-bg);}
+.fig .btn{display:inline-block;margin-top:14px;padding:8px 20px;border-radius:4px;
+  font-family:var(--mo);font-size:13px;letter-spacing:.06em;background:var(--C);color:#fff;}
+.fig .btn.ghost{background:transparent;border:1px solid var(--C);color:var(--C);margin-left:10px;}
+/* Real screenshot: size to its own natural resolution (capped to the frame width), never force-stretch —
+   a narrow/small capture must not be blown up to match a wide one, or the two look mismatched side by side. */
+figure.fig>img{display:block;margin:0 auto;max-width:100%;height:auto;background:var(--doc-bg);}
+figcaption{padding:12px 16px;border-top:1px solid var(--line-soft);
+  font-family:var(--ko);font-weight:300;font-size:14px;color:var(--mut);}
+
+/* ===========================================================
+   7. FOOTER BREADCRUMB — very small type
+   =========================================================== */
+.foot{margin-top:64px;padding-top:14px;border-top:1px solid var(--line);
+  display:flex;align-items:center;gap:7px;flex-wrap:wrap;
+  font-family:var(--mo);font-size:10.5px;letter-spacing:.06em;color:var(--dim);}
+.foot svg{flex:none;width:12px;height:12px;}
+.foot .sep{opacity:.55;}
+/* skill version stamp — its own last line, smaller than the breadcrumb above it */
+.ver{margin-top:8px;text-align:center;font-family:var(--mo);font-size:9.5px;
+  letter-spacing:.05em;color:var(--dim);opacity:.8;}
+
+/* ===========================================================
+   8. THEME TOGGLE — top-right, 30px, dark / bright
+   =========================================================== */
+.theme-toggle{position:fixed;top:16px;right:18px;z-index:1001;width:30px;height:30px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  background:color-mix(in srgb,var(--doc-bg) 82%,transparent);
+  border:1px solid var(--line);border-radius:999px;color:var(--mut);
+  backdrop-filter:blur(8px);transition:color .25s ease,border-color .25s ease,
+  background-color .35s var(--ease);}
+.theme-toggle:hover{color:var(--fg);border-color:var(--fg-2);}
+.theme-toggle svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round;}
+.theme-toggle .i-sun{display:none;}
+html[data-theme="light"] .theme-toggle .i-sun{display:block;}
+html[data-theme="light"] .theme-toggle .i-moon{display:none;}
+
+/* ===========================================================
+   9. PRINT — always bright, no chrome
+   =========================================================== */
+@media print{
+  @page{margin:14mm;}
+  html,html[data-theme="dark"],html[data-theme="light"]{
+    --page-bg:#FFFFFF;--doc-bg:#FFFFFF;--panel:#FFFFFF;
+    --line:#C9C4BA;--line-soft:#E3DFD6;
+    --fg:#14181F;--fg-2:#39414E;--mut:#5F6874;--dim:#8C93A0;
+    --A:#8F5E05;--B:#146276;--C:#174FAB;--D:#136746;
+    --wash-1:transparent;--wash-2:transparent;--dots:transparent;
+    --mark:rgba(23,79,171,.18);}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  body{background:#fff;}
+  .theme-toggle{display:none!important;}
+  section,figure.fig,.note{break-inside:avoid;}
+}
+@media (max-width:760px){
+  .doc{padding:40px 20px 72px;}
+  h1{font-size:28px;}
+  h2{font-size:25px;}
+  .board{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- top-right dark / bright mode toggle -->
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle dark / bright mode" title="Dark / Bright (T)">
+  <svg class="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  <svg class="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/>
+    <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M19.1 4.9l-1.5 1.5M6.4 17.6l-1.5 1.5"/></svg>
+</button>
+
+<div class="doc">
+
+  <div class="chrome">
+    <b>전세 탐색/ 리스크 분석</b>
+    <i>자료 기준 2026.10.10</i>
+  </div>
+
+  <div class="kick"><s></s>HOUSING RISK REVIEW</div>
+  <h1>원룸 빌라 전세 <u>리스크 비교</u></h1>
+  <div class="en">LEASE GUARANTEE/ LOCAL RISK/ PROPERTY REVIEW</div>
+  <p class="lede">이번 후보 6건은 HUG 보증 가입이 어렵다는 전제로 비교했습니다. <b>중산동은 지역 사고 신호가 크고, 개별 매물에서는 중산동 1725의 권리 부담이 가장 높습니다.</b></p>
+  <div class="spine"></div>
+
+  <div class="board">
+    <div class="cell"><div class="label">위험 점수</div><div class="v">100점 만점</div></div>
+    <div class="cell"><div class="label">비교 대상</div><div class="v">매물 6건</div></div>
+    <div class="cell"><div class="label">순위 기준</div><div class="v">높은 점수일수록 위험</div></div>
+  </div>
+
+  <div class="toc" id="toc">
+    <div class="label">목차</div>
+    <ol class="toc-list">
+      <li><a href="#sec1"><span class="n">1.</span>보증 제도의 역할</a></li>
+      <li><a href="#sec2"><span class="n">2.</span>가입을 가로막는 현장 요인</a></li>
+      <li><a href="#sec3"><span class="n">3.</span>지역별 사고 신호</a></li>
+      <li><a href="#sec4"><span class="n">4.</span>100점 위험 산정</a></li>
+      <li><a href="#sec5"><span class="n">5.</span>매물별 위험 순위</a></li>
+      <li><a href="#sec6"><span class="n">6.</span>중산동 1707-4 특별 분석</a></li>
+      <li><a href="#sec7"><span class="n">7.</span>계약 전 확인 항목</a></li>
+      <li><a href="#sec8"><span class="n">8.</span>자료 출처와 한계</a></li>
+    </ol>
+  </div>
+
+  <section id="sec1">
+    <h2><span class="num">1</span>보증 제도의 역할</h2>
+    <p>HUG는 주택도시보증공사입니다. 전세보증금반환보증은 임대차가 끝났는데 임대인이 보증금을 돌려주지 않을 때 보증기관이 심사 후 보증 한도 안에서 임차인에게 지급하고 임대인에게 회수하는 제도입니다.</p>
+    <p>일상적으로는 ‘전세보증보험’이라고 부르지만 법적 성격은 보증입니다. 가입 심사와 보증 한도가 있고 보증료를 내야 합니다.</p>
+    <div class="note">
+      <div class="label">이번 분석의 전제</div>
+      <p>여섯 후보 모두 HUG 가입이 어렵다고 보고 가입 가능 여부를 점수에서 제외했습니다. 보증이 없다는 조건에서 지역 통계와 건물 위험, 권리관계를 비교합니다.</p>
+    </div>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>항목</th><th>의미</th><th>이번 비교</th></tr></thead>
+        <tbody>
+          <tr><td>보증기관</td><td>주택도시보증공사(HUG)</td><td>보증 가입 불가를 공통 전제로 둠</td></tr>
+          <tr><td>보증 대상</td><td>임대차 종료 후 미반환된 보증금</td><td>가입 여부 대신 무보증 상태의 손실 위험을 비교</td></tr>
+          <tr><td>보호 범위</td><td>심사 결과와 보증 한도에 따름</td><td>가입해도 권리관계와 선순위 보증금 확인은 필요</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="toc-back"><a href="#toc">↑ 목차로</a></p>
+  </section>
+
+  <section id="sec2">
+    <h2><span class="num">2</span>가입을 가로막는 현장 요인</h2>
+    <p>이번 탐색 범위는 일산과 고양을 중심으로 파주, 김포, 서울까지 넓지만, 현재 후보군에서는 다가구 정보 비대칭과 건축물대장상 위반이 겹쳐 HUG 보증 가입을 기대하기 어렵습니다.</p>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>장벽</th><th>현장에서 생기는 문제</th><th>해석 범위</th></tr></thead>
+        <tbody>
+          <tr><td><b>선입주 보증금 확인</b></td><td>다가구는 여러 세대의 보증금과 확정일자가 건물 등기부에 표시되지 않습니다. 선순위 보증금 총액을 모르면 회수 가능액을 계산하기 어렵습니다.</td><td>등기부만으로 확인할 수 없는 정보입니다.</td></tr>
+          <tr><td><b>기존 임차인의 협조</b></td><td>계약 내용과 보증금은 사생활 정보라 선입주민 모두에게 자료 협조를 구하기 어렵습니다.</td><td>모든 계약에서 각 세입자 동의가 일률적으로 필요한 법적 요건이라는 뜻은 아닙니다. 후보군에서 겪는 자료 확보 장벽입니다.</td></tr>
+          <tr><td><b>위반건축물 다수</b></td><td>실제 호실 수, 용도, 증축 상태가 공부와 다르면 주택 요건 심사에서 보완 요구나 가입 제한이 생길 수 있습니다.</td><td>위반 표지만으로 모든 주택이 자동 탈락한다고 단정하지 않습니다. 유형별 심사가 다릅니다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note warn">
+      <div class="label">지역 자체의 가입 금지 아님</div>
+      <p>파주, 김포, 서울, 일산이라는 지역만으로 가입이 불가능한 것은 아닙니다. 주소와 건물 유형별 심사가 필요합니다. 이 문서는 사용자가 정한 후보군의 공통 전제를 적용합니다.</p>
+    </div>
+    <p class="toc-back"><a href="#toc">↑ 목차로</a></p>
+  </section>
+
+  <section id="sec3">
+    <h2><span class="num">3</span>지역별 사고 신호</h2>
+    <p>후보 세 지역 가운데 중산동의 최근 5년 사고, 진행 경매, 위험지수가 가장 높습니다. 아래는 같은 배점 기준으로 계산한 지역점수 순이며 세이프홈즈 자료가 있는 고양시 법정동만 비교했습니다.</p>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>점수 순</th><th>지역</th><th>최근 5년 HUG 사고</th><th>진행 중 경매</th><th>위험지수</th><th>지역점수</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><a href="https://safehomes.kr/risk-map/경기도/고양시-일산서구/덕이동" target="_blank" rel="noreferrer">덕이동/ 일산서구</a></td><td>122건</td><td>111건</td><td>86.9</td><td><b>30/30</b></td></tr>
+          <tr><td>2</td><td><a href="https://safehomes.kr/risk-map/경기도/고양시-일산서구/탄현동" target="_blank" rel="noreferrer">탄현동/ 일산서구</a></td><td>74건</td><td>77건</td><td>79.1</td><td><b>24/30</b></td></tr>
+          <tr><td>2</td><td><a href="https://safehomes.kr/risk-map/경기도/고양시-일산동구/풍동" target="_blank" rel="noreferrer">풍동/ 일산동구</a></td><td>100건</td><td>74건</td><td>78.5</td><td><b>24/30</b></td></tr>
+          <tr><td>4</td><td><a href="https://safehomes.kr/risk-map/경기도/고양시-일산동구/중산동" target="_blank" rel="noreferrer"><b>중산동/ 일산동구</b></a></td><td><b>36건</b></td><td><b>46건</b></td><td><b>70.5</b></td><td><b>19/30</b></td></tr>
+          <tr><td>5</td><td><a href="https://safehomes.kr/risk-map/경기도/고양시-일산서구/일산동" target="_blank" rel="noreferrer">일산동/ 일산서구</a></td><td>8건</td><td>56건</td><td>58.9</td><td>16/30</td></tr>
+          <tr><td>6</td><td><a href="https://safehomes.kr/risk-map/경기도/고양시-일산동구/백석동" target="_blank" rel="noreferrer">백석동/ 일산동구</a></td><td>6건</td><td>28건</td><td>54.5</td><td>13/30</td></tr>
+          <tr><td>6</td><td><a href="https://safehomes.kr/risk-map/경기도/고양시-덕양구/주교동" target="_blank" rel="noreferrer">주교동/ 덕양구</a></td><td>16건</td><td>17건</td><td>68.0</td><td>13/30</td></tr>
+          <tr><td>8</td><td><a href="https://safehomes.kr/risk-map/경기도/고양시-덕양구/내곡동" target="_blank" rel="noreferrer">내곡동/ 덕양구</a></td><td>미표시</td><td>1건</td><td>91.1</td><td>11/30*</td></tr>
+          <tr><td>9</td><td><a href="https://safehomes.kr/risk-map/경기도/고양시-일산동구/마두동" target="_blank" rel="noreferrer"><b>마두동/ 일산동구</b></a></td><td><b>1건</b></td><td><b>20건</b></td><td><b>47.4</b></td><td><b>7/30</b></td></tr>
+          <tr><td>9</td><td><a href="https://safehomes.kr/risk-map/경기도/고양시-덕양구/성사동" target="_blank" rel="noreferrer">성사동/ 덕양구</a></td><td>2건</td><td>18건</td><td>46.5</td><td>7/30</td></tr>
+          <tr><td>11</td><td><a href="https://safehomes.kr/risk-map/경기도/고양시-덕양구/대장동" target="_blank" rel="noreferrer">대장동/ 덕양구</a></td><td>미표시</td><td>6건</td><td>48.1</td><td>5/30*</td></tr>
+          <tr><td>11</td><td><a href="https://safehomes.kr/risk-map/경기도/고양시-덕양구/토당동" target="_blank" rel="noreferrer">토당동/ 덕양구</a></td><td>미표시</td><td>10건</td><td>45.4</td><td>5/30*</td></tr>
+          <tr><td>13</td><td><a href="https://safehomes.kr/risk-map/경기도/고양시-일산동구/정발산동" target="_blank" rel="noreferrer"><b>정발산동/ 일산동구</b></a></td><td><b>미표시</b></td><td><b>4건</b></td><td><b>48.5</b></td><td><b>3/30*</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>* 최근 5년 사고 항목이 ‘-’인 지역은 확인된 0건이 아닙니다. 계산을 위해 0으로 처리했으므로 점수가 낮게 잡혔을 수 있습니다. 지역점수는 사고 건수 10점, 진행 중 경매 10점, 위험지수 10점으로 계산했습니다.</p>
+    <div class="note">
+      <div class="label">일산동구 월별 밀집도</div>
+      <p>사용자가 제공한 세이프홈즈 일산동구 페이지의 2026년 1-7월 ‘종합’ 월별 값을 합산했습니다. 경매와 보증사고가 섞인 밀집도이며 HUG 미반환 사고 통계와 같지 않습니다.</p>
+    </div>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>순위</th><th>일산동구 법정동</th><th>2026년 1-7월 종합 건수</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>식사동</td><td>74건</td></tr>
+          <tr><td>2</td><td>성석동</td><td>54건</td></tr>
+          <tr><td>3</td><td>풍동</td><td>44건</td></tr>
+          <tr><td>4</td><td><b>중산동</b></td><td><b>33건</b></td></tr>
+          <tr><td>5</td><td>장항동</td><td>27건</td></tr>
+          <tr><td>6</td><td>백석동</td><td>22건</td></tr>
+          <tr><td>7</td><td><b>마두동</b></td><td><b>16건</b></td></tr>
+          <tr><td>8</td><td>사리현동</td><td>12건</td></tr>
+          <tr><td>9</td><td>문봉동</td><td>6건</td></tr>
+          <tr><td>10</td><td><b>정발산동</b></td><td><b>5건</b></td></tr>
+          <tr><td>11</td><td>설문동</td><td>3건</td></tr>
+          <tr><td>12</td><td>산황동</td><td>1건</td></tr>
+          <tr><td>13</td><td>지영동</td><td>0건</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>파주, 김포, 서울은 동일 기준의 지역 자료가 없어 순위를 매기지 않았습니다. 이 문서의 지역 순위는 세이프홈즈 자료가 확인된 고양시 지역에 한정합니다.</p>
+    <p class="toc-back"><a href="#toc">↑ 목차로</a></p>
+  </section>
+
+  <section id="sec4">
+    <h2><span class="num">4</span>100점 위험 산정</h2>
+    <p>점수는 사고 확률이 아니라 후보끼리 비교하기 위한 가중 합계입니다. 등기부는 현재 소유자가 취득한 뒤의 권리만 집계했고 전 소유자 시절 기록은 제외했습니다.</p>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>구분</th><th>배점</th><th>산정 방식</th></tr></thead>
+        <tbody>
+          <tr><td><b>지역위험</b></td><td>30점</td><td>최근 5년 HUG 사고 건수 10점 + 진행 중 경매 10점 + 세이프홈즈 위험지수 10점</td></tr>
+          <tr><td><b>건물위험</b></td><td>40점</td><td>사용승인 후 경과연수×0.5점(최대 15) + 조적조 10점 + 실제 또는 추정 가구수×1.5점(최대 15)</td></tr>
+          <tr><td><b>권리관계</b></td><td>30점</td><td>유효 근저당 채권최고액 점수 15점 + 현 소유자 취득 후 압류와 가압류 이력 점수 15점</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>세부 점수 구간</h3>
+    <ul>
+      <li><b>지역</b> - HUG 사고는 0/5/20/50/100건 구간, 경매는 5/20/50/80건 구간으로 점수를 나눴습니다. 위험지수는 50/60/70/80 구간을 적용했습니다.</li>
+      <li><b>근저당</b> - 채권최고액 0원은 0점, 1억원 이하는 4점, 2억원 이하는 8점, 3억원 이하는 11점, 초과는 15점입니다.</li>
+      <li><b>압류 이력</b> - 마지막 해제 시점이 최근일수록 가산하고 건수도 반영했습니다. 현재 유효한 권리와 해제된 이력은 구분했습니다.</li>
+    </ul>
+    <div class="note warn">
+      <div class="label">위반 정도의 반영</div>
+      <p>위반건축물 표시 유무는 점수에 넣지 않았습니다. 다만 대장 변동사항에 적힌 가구수 증설 규모는 건물위험의 가구수 항목에 반영했습니다. 가구 수를 추정한 매물은 표에 불확실성을 표시했습니다.</p>
+    </div>
+    <p class="toc-back"><a href="#toc">↑ 목차로</a></p>
+  </section>
+
+  <section id="sec5">
+    <h2><span class="num">5</span>매물별 위험 순위</h2>
+    <p>점수 높은 순으로 정렬했습니다. 총점은 반올림 전 수치이며 등기 이력은 현재 소유자가 취득한 뒤에 한정했습니다.</p>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>순위</th><th>매물/ 보증금</th><th>합계</th><th>지역</th><th>건물</th><th>권리</th><th>현 소유자 이후의 핵심 사실</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><b>중산동 1725</b><br>6,000만원</td><td><b>58.0</b></td><td>19</td><td>14.0</td><td>25</td><td>2016년 취득. 유효 근저당 3.6억원으로 후보 중 최대. 2025년 12월 가압류 5,500만원은 2026년 6월 해제됐지만 시점이 가깝습니다. 2010년 사용승인 RC, 대장상 4가구 기준입니다.</td></tr>
+          <tr><td>2</td><td><b>정발산동 1227-5</b><br>5,000만원</td><td><b>49.9</b></td><td>3</td><td>23.9</td><td>23</td><td>현 소유자는 2008년부터 보유. 유효 근저당 1.2억원. 취득 후 압류 4건이 기록됐고 최근 건은 2025년 11월 해제. 대장에는 4가구에서 10가구로 늘린 무단 대수선이 기재돼 있습니다.</td></tr>
+          <tr><td>3</td><td><b>중산동 1707-4</b><br>7,000만원</td><td><b>41.9</b></td><td>19</td><td>17.9</td><td>5</td><td>2012년 소유권보존 후 계속 보유. 현재 유효한 근저당과 압류는 없습니다. 취득 후 압류 2건은 해제됐습니다. 대장에는 2013년, 2021년, 2024년 위반 내용이 반복되고 2024년 16.52㎡ 증축도 적혀 있습니다. 4가구에 3가구가 추가된 것으로 보고 7가구를 추정했습니다.</td></tr>
+          <tr><td>4</td><td><b>마두동 832-3</b><br>6,500만원</td><td><b>40.7</b></td><td>7</td><td>33.7</td><td>0</td><td>현 소유자가 2014년 취득한 뒤 유효한 근저당과 압류가 없습니다. 이전 소유자 때 말소된 근저당은 제외했습니다. 1997년 조적조라 건물 점수가 높고 대장 비고의 ‘6가구 위반’은 판독이 불명확해 6가구로 추정했습니다.</td></tr>
+          <tr><td>5</td><td><b>정발산동 1136-2</b><br>6,000만원</td><td><b>36.9</b></td><td>3</td><td>16.9</td><td>17</td><td>현 소유자는 2012년 경매로 취득. 유효 근저당은 1.3억원입니다. 취득 후 국세와 지방세 압류, 11.3억원 가압류가 있었으나 모두 해제됐고 현재 유효한 압류는 없습니다. RC, 2002년 사용승인, 3가구 기준입니다.</td></tr>
+          <tr><td>6</td><td><b>마두동 839-1</b><br>8,000만원</td><td><b>31.4</b></td><td>7</td><td>20.4</td><td>4</td><td>현 소유자는 2008년 취득. 취득 후 압류나 가압류가 없습니다. 유효 근저당 8,400만원은 제3자 채무이며 토지 공동담보입니다. 대장에는 ‘1가구 및 층수 위반’이 적혀 있고 5가구로 추정했으나 확인이 필요합니다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">
+      <div class="label">순위 해석</div>
+      <p>3위 중산동 1707-4와 4위 마두동 832-3의 차이는 1.2점입니다. 가구수 추정과 위반 규모 반영 방식에 따라 순서가 바뀔 수 있어 사실상 근접한 후보입니다. 가장 낮은 점수도 무위험을 뜻하지 않습니다.</p>
+    </div>
+    <div class="note warn">
+      <div class="label">중산동 1725 대장 자료 불일치</div>
+      <p>사용자가 연결한 대장 PNG는 중산동 1725가 아니라 1725-4(소개울2길 11-4)입니다. 등기부의 1725(소개울3길 14)와 다른 건물입니다. 이 표의 건물 점수는 1725와 일치하는 2026년 9월 발급 대장을 기준으로 했습니다. 계약 전 주소와 대장을 다시 대조해야 합니다.</p>
+    </div>
+    <p class="toc-back"><a href="#toc">↑ 목차로</a></p>
+  </section>
+
+  <section id="sec6">
+    <h2><span class="num">6</span>중산동 1707-4 특별 분석</h2>
+    <div class="note">
+      <div class="label">대상 매물</div>
+      <p>중산동 1707-4, 하늘마을로93번길 22-2, 전세 7,000만원. 사용자 입지 정보에 따르면 일산 아이파크 1, 2차 생활권입니다.</p>
+    </div>
+    <p>이 매물의 약점인 지역점수 19/30은 중산동 전체의 통계를 반영합니다. 다만 1707-4는 일산 아이파크 1, 2차 생활권에 있어 중산동의 다른 구역과 입지 여건이 다릅니다. 이 미시 입지를 고려하면 실제 지역위험은 중산동 평균보다 낮을 것으로 판단합니다.</p>
+    <div class="note">
+      <div class="label">동 평균과 미시 입지의 차이</div>
+      <p>중산동 통계에는 서로 다른 주택 유형과 동네가 함께 들어갑니다. 아이파크 1, 2차 생활권이라는 점은 다른 중산동 구역보다 실제 위험을 낮게 볼 수 있는 정성적 완화 요인입니다. 세이프홈즈는 아파트 단지 주변 골목이나 개별 건물을 따로 채점하지 않으므로 이 차이를 수치로 확인할 수는 없습니다.</p>
+    </div>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>평가축</th><th>낮추는 요인</th><th>남는 위험</th></tr></thead>
+        <tbody>
+          <tr><td><b>지역과 입지</b></td><td>중산동 전체 통계만으로 개별 생활권을 단정할 수 없습니다. 아이파크 1, 2차 인접 생활권이라면 다른 중산동 구역보다 위험이 낮을 여지가 있습니다.</td><td>지역점수 19점은 행정동 통계 그대로 유지했습니다. 미시 입지에 대한 별도 사고 자료는 없습니다.</td></tr>
+          <tr><td><b>등기 권리</b></td><td>현재 유효한 근저당, 압류, 가압류는 없습니다. 2012년부터 한 소유자가 보유합니다.</td><td>현 소유자 때 지자체 압류 2건이 있었으나 2014년과 2016년에 해제됐습니다.</td></tr>
+          <tr><td><b>건물</b></td><td>2012년 준공, 철근콘크리트조, 사용승인 연식은 후보 중 비교적 짧은 편입니다.</td><td>위반 기록이 2013년, 2021년, 2024년에 반복됩니다. 2024년 대장에 16.52㎡ 경량철골 증축이 기재됐고 해제 기록은 확인되지 않았습니다.</td></tr>
+          <tr><td><b>선순위 임차인</b></td><td>등기부상 임차권등기나 유효 담보권은 확인되지 않았습니다.</td><td>등기부만으로 입주 세대의 보증금과 확정일자 순위를 알 수 없습니다. 대장 4가구에 3가구가 추가됐다는 해석은 추정입니다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note warn">
+      <div class="label">종합 판단</div>
+      <p>권리관계만 보면 1707-4는 6건 중 부담이 작은 편입니다. 중산동 평균 통계가 약점이지만 아이파크 1, 2차 생활권이라는 점을 고려해 실제 지역위험을 동 평균보다 낮게 판단했습니다. 다만 선순위 보증금과 위반 증축은 별도 확인이 필요하고, 이 정성적 판단은 공식 점수 41.9점에는 반영하지 않았습니다.</p>
+    </div>
+    <p class="toc-back"><a href="#toc">↑ 목차로</a></p>
+  </section>
+
+  <section id="sec7">
+    <h2><span class="num">7</span>계약 전 확인 항목</h2>
+    <p>등기부와 건축물대장만으로 선순위 임차보증금과 실제 회수액을 알 수 없습니다. 아래 자료를 확인해야 점수가 실제 손실 위험에 얼마나 가까운지 판단할 수 있습니다.</p>
+    <ul class="checklist">
+      <li><b>선순위 임차보증금</b> - 확정일자 부여현황과 전입세대 정보를 확인하고 전체 보증금과 입주 순서를 확인합니다.</li>
+      <li><b>토지 등기</b> - 현재 자료는 건물 중심입니다. 토지의 근저당, 압류, 신탁과 공동담보 범위를 별도로 확인합니다.</li>
+      <li><b>잔금일 권리</b> - 계약 직전과 잔금 직전에 등기를 다시 열람하고 추가 근저당이나 압류가 없는지 확인합니다.</li>
+      <li><b>건물 상태</b> - 실제 호실 수와 대장 변동사항을 대조합니다. 1707-4의 증축, 832-3과 839-1의 가구수 추정은 특히 확인이 필요합니다.</li>
+      <li><b>총 선순위 부담</b> - 근저당 채권최고액, 선순위 보증금, 내 보증금을 보수적인 시세와 비교합니다. 현재는 감정가와 선순위 보증금이 없어 깡통 비율을 계산할 수 없습니다.</li>
+    </ul>
+    <div class="note warn">
+      <div class="label">등기 해석의 한계</div>
+      <p>열람용 등기부는 법적 효력이 없습니다. 근저당 점수는 실제 대출 잔액이 아니라 등기된 채권최고액을 기준으로 했습니다.</p>
+    </div>
+    <p class="toc-back"><a href="#toc">↑ 목차로</a></p>
+  </section>
+
+  <section id="sec8">
+    <h2><span class="num">8</span>자료 출처와 한계</h2>
+    <p>지역 통계와 매물별 서류를 결합했지만, 지역 지표는 동 단위이며 개별 주택의 사고 확률이 아닙니다.</p>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>자료</th><th>출처</th><th>기준과 주의점</th></tr></thead>
+        <tbody>
+          <tr><td>HUG</td><td><a href="https://www.khug.or.kr/jeonse/web/s01/s010101.jsp" target="_blank" rel="noreferrer">전세보증 상품 안내</a></td><td>상품 요건은 주택과 계약별 심사에 따릅니다.</td></tr>
+          <tr><td>세이프홈즈</td><td><a href="https://safehomes.kr/risk-map/summary/density/2026-%EC%A0%84%EC%B2%B4-41285-%EA%B2%BD%EA%B8%B0%EB%8F%84-%EA%B3%A0%EC%96%91%EC%8B%9C%20%EC%9D%BC%EC%82%B0%EB%8F%99%EA%B5%AC-%EC%A0%84%EC%B2%B4?lat=37.517923&amp;lng=126.925980&amp;zoom=16" target="_blank" rel="noreferrer">일산동구 전체 경매와 보증사고 밀집도</a></td><td>2026년 1-7월 종합 월별 건수. 자료별 기준일은 페이지 표시일을 따릅니다.</td></tr>
+          <tr><td>지역 위험지표</td><td>지역별 링크는 지역표에 연결</td><td>2026년 10월 조회값. 위험지수 기준월 2026년 7월</td></tr>
+          <tr><td>매물 서류</td><td>사용자가 제공한 등기부와 건축물대장 링크</td><td>1707-4 등기 열람일과 대장 발급일은 2026년 10월 10일입니다. 1725의 표 점수는 주소가 일치하는 2026년 9월 발급 대장에 근거하며, 아래에 연결한 제공 PNG는 1725-4 자료입니다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>매물 서류</h3>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>매물</th><th>건축물대장</th><th>부동산등기</th></tr></thead>
+        <tbody>
+          <tr><td>마두동 832-3/ 6,500만원</td><td><a href="https://cdn.microbiz.ai/personal/oneroom/%E1%84%86%E1%85%A1%E1%84%83%E1%85%AE%E1%84%83%E1%85%A9%E1%86%BC-832-3-6500.jpg" target="_blank" rel="noreferrer">JPG 열기</a></td><td><a href="https://cdn.microbiz.ai/personal/oneroom/%E1%84%86%E1%85%A1%E1%84%83%E1%85%AE%E1%84%83%E1%85%A9%E1%86%BC-832-3-6500.pdf" target="_blank" rel="noreferrer">PDF 열기</a></td></tr>
+          <tr><td>마두동 839-1/ 8,000만원</td><td><a href="https://cdn.microbiz.ai/personal/oneroom/%E1%84%86%E1%85%A1%E1%84%83%E1%85%AE%E1%84%83%E1%85%A9%E1%86%BC-839-1-8000.jpg" target="_blank" rel="noreferrer">JPG 열기</a></td><td><a href="https://cdn.microbiz.ai/personal/oneroom/%E1%84%86%E1%85%A1%E1%84%83%E1%85%AE%E1%84%83%E1%85%A9%E1%86%BC-839-1-8000.pdf" target="_blank" rel="noreferrer">PDF 열기</a></td></tr>
+          <tr><td>정발산동 1136-2/ 6,000만원</td><td><a href="https://cdn.microbiz.ai/personal/oneroom/%E1%84%8C%E1%85%A5%E1%86%BC%E1%84%87%E1%85%A1%E1%86%AF%E1%84%89%E1%85%A1%E1%86%AB-1136-2-6000.jpg" target="_blank" rel="noreferrer">JPG 열기</a></td><td><a href="https://cdn.microbiz.ai/personal/oneroom/%E1%84%8C%E1%85%A5%E1%86%BC%E1%84%87%E1%85%A1%E1%86%AF%E1%84%89%E1%85%A1%E1%86%AB-1136-2-6000.pdf" target="_blank" rel="noreferrer">PDF 열기</a></td></tr>
+          <tr><td>정발산동 1227-5/ 5,000만원</td><td><a href="https://cdn.microbiz.ai/personal/oneroom/%E1%84%8C%E1%85%A5%E1%86%BC%E1%84%87%E1%85%A1%E1%86%AF%E1%84%89%E1%85%A1%E1%86%AB-1227-5-5000.jpg" target="_blank" rel="noreferrer">JPG 열기</a></td><td><a href="https://cdn.microbiz.ai/personal/oneroom/%E1%84%8C%E1%85%A5%E1%86%BC%E1%84%87%E1%85%A1%E1%86%AF%E1%84%89%E1%85%A1%E1%86%AB-1227-5-5000.pdf" target="_blank" rel="noreferrer">PDF 열기</a></td></tr>
+          <tr><td>중산동 1707-4/ 7,000만원</td><td><a href="https://cdn.microbiz.ai/personal/oneroom/%E1%84%8C%E1%85%AE%E1%86%BC%E1%84%89%E1%85%A1%E1%86%AB%E1%84%83%E1%85%A9%E1%86%BC-1707-4-7000.jpg" target="_blank" rel="noreferrer">JPG 열기</a></td><td><a href="https://cdn.microbiz.ai/personal/oneroom/%E1%84%8C%E1%85%AE%E1%86%BC%E1%84%89%E1%85%A1%E1%86%AB%E1%84%83%E1%85%A9%E1%86%BC-1707-4-7000.pdf" target="_blank" rel="noreferrer">PDF 열기</a></td></tr>
+          <tr><td>중산동 1725/ 6,000만원</td><td><a href="https://cdn.microbiz.ai/personal/oneroom/%E1%84%8C%E1%85%AE%E1%86%BC%E1%84%89%E1%85%A1%E1%86%AB%E1%84%83%E1%85%A9%E1%86%BC-1725-6000.png" target="_blank" rel="noreferrer">제공 PNG 열기</a></td><td><a href="https://github.com/musma21/public-download/blob/main/personal/oneroom/%E1%84%8C%E1%85%AE%E1%86%BC%E1%84%89%E1%85%A1%E1%86%AB%E1%84%83%E1%85%A9%E1%86%BC-1725-6000.pdf" target="_blank" rel="noreferrer">PDF 열기</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note warn">
+      <div class="label">점수에 반영하지 못한 정보</div>
+      <p>선순위 임차보증금, 실거래 시세와 토지 등기부는 확인하지 못했습니다. 중산동 1725는 주소가 일치하는 2026년 9월 발급 대장을 점수에 사용했지만, 링크된 제공 PNG는 1725-4 자료입니다. 이 정보가 달라지면 점수와 순위도 달라질 수 있습니다.</p>
+    </div>
+    <p class="toc-back"><a href="#toc">↑ 목차로</a></p>
+  </section>
+
+  <div class="foot">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="6" fill="currentColor" opacity=".55"></rect><path d="M8 17.5v-11h4.6a2.9 2.9 0 0 1 1 5.6 3 3 0 0 1-.6 5.4H8z" fill="var(--doc-bg)"/></svg>
+    <span>전세 탐색</span><span class="sep">/</span><span>고양시 후보</span><span class="sep">/</span><span>원룸 빌라 전세 리스크 비교</span>
+  </div>
+  <div class="ver">sunyi-single-html v1.2.0</div>
+
+</div>
+
+<script>
+/* Dark / Bright mode — top-right toggle, remembered, T shortcut */
+(function theme(){
+  const root=document.documentElement, btn=document.getElementById('themeToggle');
+  const KEY='doc-theme';
+  let saved=null; try{saved=localStorage.getItem(KEY);}catch(e){}
+  if(!saved) saved='dark'; /* always dark on first load — never defer to system/browser preference */
+  root.setAttribute('data-theme',saved);
+  const set=t=>{root.setAttribute('data-theme',t);try{localStorage.setItem(KEY,t);}catch(e){}};
+  const flip=()=>set(root.getAttribute('data-theme')==='dark'?'light':'dark');
+  btn.addEventListener('click',flip);
+  addEventListener('keydown',e=>{
+    if((e.key==='t'||e.key==='T')&&!e.metaKey&&!e.ctrlKey&&!e.altKey) flip();
+  });
+})();
+</script>
+
+
+</body></html>
