@@ -1,0 +1,786 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>중산동 1707-4 · 101호 | 3D 방 조감도</title>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("scoutTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--cp-bg); color: var(--cp-text);
+      font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 14px;
+    }
+    button, select, input { font: inherit; }
+    button, select {
+      border: 1px solid var(--cp-border); border-radius: 10px;
+      color: var(--cp-text); background: var(--cp-surface); padding: 9px 12px;
+    }
+    button { cursor: pointer; }
+    button:disabled, select:disabled { opacity: .5; cursor: default; }
+    button:hover, select:hover { border-color: var(--cp-accent); }
+    button:focus-visible, select:focus-visible, canvas:focus-visible {
+      outline: 2px solid var(--cp-accent); outline-offset: 3px;
+    }
+    button[aria-pressed="true"] {
+      background: var(--cp-accent); color: var(--cp-accent-fg); border-color: var(--cp-accent);
+    }
+    input { accent-color: var(--cp-accent); }
+    header {
+      max-width: 1540px; margin: auto; padding: 28px 32px 20px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+    .eyebrow { font-size: 11px; letter-spacing: .16em; color: var(--cp-text-muted); margin-bottom: 6px; }
+    h1 { margin: 0; font-size: 25px; font-weight: 650; letter-spacing: -.04em; }
+    .subtitle { margin: 8px 0 0; color: var(--cp-text-muted); }
+    .badge {
+      display: inline-block; border: 1px solid var(--cp-border); border-radius: 10px;
+      background: var(--cp-surface); padding: 9px 12px; white-space: nowrap;
+      color: var(--cp-text-muted); font-size: 12px;
+    }
+    main {
+      max-width: 1540px; margin: 0 auto; padding: 0 32px 28px;
+      display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 20px;
+    }
+    .viewer, aside {
+      border: 1px solid var(--cp-border); border-radius: 16px;
+      background: var(--cp-surface); overflow: hidden;
+    }
+    .viewer { align-self: start; }
+    .toolbar {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+      padding: 14px 16px; border-bottom: 1px solid var(--cp-border);
+    }
+    .toolbar .spacer { flex: 1; }
+    .stage {
+      position: relative; height: clamp(460px, 69vh, 780px);
+      background: var(--cp-bg-elevated); overflow: hidden;
+    }
+    canvas { position: absolute; width: 100%; height: 100%; display: block; }
+    #scene { touch-action: none; cursor: grab; }
+    #scene:active { cursor: grabbing; }
+    #overlay { pointer-events: none; }
+    .stage-note {
+      position: absolute; top: 16px; left: 16px; pointer-events: none;
+      font-size: 12px; line-height: 1.8; color: var(--cp-text-muted);
+      padding: 8px 12px; border-radius: 10px; background: var(--cp-panel-strong);
+      border: 1px solid var(--cp-border);
+    }
+    .zoom { position: absolute; right: 16px; bottom: 16px; display: flex; gap: 6px; }
+    .zoom button { min-width: 40px; }
+    #error {
+      position: absolute; inset: 24px; z-index: 2; padding: 28px;
+      background: var(--cp-surface); color: var(--cp-danger); border: 1px solid var(--cp-danger);
+      border-radius: 16px; line-height: 1.7;
+    }
+    #error[hidden] { display: none; }
+    .viewer-footer {
+      padding: 14px 16px; display: flex; gap: 12px; flex-wrap: wrap;
+      align-items: center; justify-content: space-between; border-top: 1px solid var(--cp-border);
+    }
+    .checks { display: flex; gap: 16px; }
+    .checks label { display: flex; align-items: center; gap: 6px; }
+    .hint { font-size: 12px; color: var(--cp-text-muted); }
+    aside { align-self: start; }
+    .section { padding: 20px; border-bottom: 1px solid var(--cp-border); }
+    .section:last-child { border: 0; }
+    h2 { font-size: 15px; margin: 0 0 12px; font-weight: 650; }
+    p { line-height: 1.65; }
+    .section p { margin: 8px 0 0; color: var(--cp-text-muted); font-size: 12px; }
+    .room-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+    .swatch {
+      width: 12px; height: 12px; border-radius: 3px;
+      border: 1px solid var(--cp-border-strong); background: var(--cp-surface-soft);
+    }
+    .swatch.bed { background: var(--cp-highlight); border-color: var(--cp-accent); }
+    .swatch.assumed { background: var(--cp-border); border-style: dashed; }
+    .room-row small { margin-left: auto; color: var(--cp-text-muted); font-size: 11px; }
+    .callout {
+      padding: 12px; border-left: 3px solid var(--cp-accent);
+      background: var(--cp-accent-soft); border-radius: 0 10px 10px 0;
+      font-size: 12px; line-height: 1.7;
+    }
+    details summary { cursor: pointer; font-weight: 600; font-size: 13px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 12px; font-size: 12px; }
+    th, td { text-align: left; padding: 8px 0; border-bottom: 1px solid var(--cp-border); }
+    th { font-weight: 500; color: var(--cp-text-muted); }
+    td { text-align: right; font-variant-numeric: tabular-nums; }
+    .source { overflow-wrap: anywhere; }
+    noscript { display: block; padding: 24px; color: var(--cp-danger); }
+    @media (max-width: 1050px) {
+      main { grid-template-columns: minmax(0, 1fr); }
+      aside { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .section { border-bottom: 1px solid var(--cp-border); }
+      .stage { height: 65vh; min-height: 460px; }
+    }
+    @media (max-width: 600px) {
+      header { padding: 20px 16px 16px; align-items: flex-start; }
+      h1 { font-size: 22px; }
+      header .badge { display: none; }
+      main { padding: 0 12px 20px; gap: 12px; }
+      aside { display: block; }
+      .toolbar { padding: 10px; gap: 6px; }
+      .toolbar button, .toolbar select { padding: 8px 9px; font-size: 12px; }
+      .toolbar .spacer { display: none; }
+      .stage { min-height: 420px; height: 58vh; }
+      .stage-note { font-size: 11px; top: 10px; left: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <div class="eyebrow">ROOM STUDY · SKETCH-BASED MODEL</div>
+      <h1>중산동 1707-4 · 101호</h1>
+      <p class="subtitle">손그림 배치를 반영한 간단한 3D 조감도</p>
+    </div>
+    <span class="badge">손그림 반영 · 단위 cm</span>
+  </header>
+  <main>
+    <section class="viewer" aria-label="인터랙티브 방 조감도">
+      <div class="toolbar">
+        <button id="view3d" aria-pressed="true">3D 조감도</button>
+        <button id="viewTop" aria-pressed="false">평면도</button>
+        <span class="spacer"></span>
+        <button id="rotateLeft" aria-label="왼쪽으로 30도 회전">↶</button>
+        <button id="rotateRight" aria-label="오른쪽으로 30도 회전">↷</button>
+        <select id="wallMode" aria-label="벽 표시">
+          <option value="110">낮은 벽</option>
+          <option value="230">전체 높이</option>
+          <option value="0">바닥만</option>
+        </select>
+        <button id="reset">처음 시점</button>
+      </div>
+      <div class="stage" id="stage">
+        <canvas id="scene" tabindex="0" aria-label="3D 방 모델. 드래그로 회전, 휠로 확대 및 축소. 방향키로 회전, 더하기와 빼기로 확대 및 축소."></canvas>
+        <canvas id="overlay" aria-hidden="true"></canvas>
+        <div class="stage-note">
+          <strong id="viewStatus">벽 110 cm 절개</strong><br>
+          실제 높이 약 230 cm · 바닥 격자 50 cm
+        </div>
+        <div class="zoom">
+          <button id="zoomOut" aria-label="축소">−</button>
+          <button id="zoomIn" aria-label="확대">+</button>
+        </div>
+        <div id="error" role="alert" hidden></div>
+      </div>
+      <div class="viewer-footer">
+        <div class="checks">
+          <label><input id="labels" type="checkbox" checked> 공간 이름</label>
+          <label><input id="dimensions" type="checkbox"> 상세 치수</label>
+        </div>
+        <span class="hint">드래그: 회전 · 휠/두 손가락: 확대 · Shift+드래그: 이동</span>
+      </div>
+    </section>
+    <aside>
+      <div class="section">
+        <h2>공간 구분</h2>
+        <div class="room-row"><span class="swatch"></span><strong>거실</strong><small>싱크대가 있는 공간</small></div>
+        <div class="room-row"><span class="swatch bed"></span><strong>안방</strong><small>문 안쪽 방</small></div>
+        <div class="room-row"><span class="swatch assumed"></span><strong>욕실</strong><small>안방 왼쪽 아래</small></div>
+        <div class="room-row"><span class="swatch assumed"></span><strong>보일러실</strong><small>현관 왼쪽 · 크기 추정</small></div>
+        <p>평면도는 손그림과 같은 방향입니다. 위쪽은 안방, 아래쪽은 거실과 현관이며, 싱크대는 거실 왼쪽 벽에 붙였습니다. 천장은 생략했습니다.</p>
+      </div>
+      <div class="section">
+        <h2>해석 범위</h2>
+        <div class="callout">
+          안방 왼쪽 위의 <strong>117 × 117 오목 공간</strong>과 그 아래 욕실, 거실 아래의 <strong>보일러실·신발장·현관</strong>을 손그림에 맞췄습니다.
+        </div>
+        <p>거실의 420은 세로 길이입니다. 왼쪽 벽의 230은 안방 쪽 벽에서 싱크대 시작점까지로 적용하고, 싱크대 140은 같은 벽을 따라 놓았습니다.</p>
+        <p>손그림의 문 폭·문 옆 벽 <strong>83</strong>을 최신값으로 반영했습니다(앞서 전달한 값은 각각 84). 거실 가로는 130 + 83 + 83 = <strong>296</strong>입니다. 420과 다른 방향의 치수이므로 기존의 ‘미확정 122’는 삭제했습니다.</p>
+        <p>안방은 외곽 440 × 320에서 왼쪽 아래 욕실을 뺀 형태입니다. 문 오른쪽에서 벽까지 220을 적용해, 거실 오른쪽 외벽은 안방보다 137 안쪽으로 들어옵니다. 손그림의 비율보다 적힌 치수를 우선했습니다.</p>
+        <p>욕실 외곽은 남는 구간을 117 × 203으로 역산한 임시 형상이며 내부 실측값은 아닙니다. 보일러실·현관의 깊이(그림에서는 100), 신발장 크기, 욕실·보일러실·현관 문 크기와 여닫이 방향, 창 크기·높이, 벽 두께, 싱크대 깊이·높이와 설비 모양은 참고용입니다.</p>
+      </div>
+      <div class="section">
+        <details open>
+          <summary>반영 치수 · cm</summary>
+          <table aria-label="사용자 실측값">
+            <tbody>
+              <tr><th>방 높이</th><td>약 230</td></tr>
+              <tr><th>거실 · 벽에서 싱크대까지</th><td>230</td></tr>
+              <tr><th>직각으로 문까지</th><td>130</td></tr>
+              <tr><th>문 폭 · 손그림</th><td>83 (이전 84)</td></tr>
+              <tr><th>문에서 다시 벽까지 · 손그림</th><td>83 (이전 84)</td></tr>
+              <tr><th>거실 · 세로</th><td>420</td></tr>
+              <tr><th>싱크대 폭</th><td>140</td></tr>
+              <tr><th>문 폭 × 높이</th><td>83 × 200</td></tr>
+              <tr><th>안방 입구 오른쪽 벽까지</th><td>220</td></tr>
+              <tr><th>안방 · 세로</th><td>320</td></tr>
+              <tr><th>안방 · 가로</th><td>440</td></tr>
+              <tr><th>안방 오목 공간</th><td>117 × 117</td></tr>
+            </tbody>
+          </table>
+        </details>
+      </div>
+      <div class="section">
+        <details>
+          <summary>손그림·사진·영상 기준</summary>
+          <p class="source">공간 연결과 문·창·설비 위치는 새로 전달한 손그림을 우선했습니다. 치수는 손그림의 숫자와 앞서 전달한 실측값을 함께 사용했습니다.</p>
+          <p class="source">2026-10-15 사진 48장은 싱크대·창·설비의 단순한 모양을 표현하는 데 참고했습니다.</p>
+          <p class="source">20261010_130713.mp4 / 20261010_132034.mp4는 사진과 싱크대 마감·욕실 배치가 달라 동일 공간으로 단정하지 않았습니다. 두 영상의 구조는 이 모델에 합치지 않았습니다.</p>
+          <p>외부 라이브러리·인터넷 연결 없이 이 HTML 파일만으로 동작합니다. 실측 도면이나 계약 면적 산정 자료로 사용하지 마세요.</p>
+        </details>
+      </div>
+    </aside>
+  </main>
+  <noscript>조감도를 보려면 브라우저의 JavaScript를 활성화해야 합니다.</noscript>
+  <script>
+    (() => {
+      "use strict";
+      const canvas = document.getElementById("scene");
+      const overlay = document.getElementById("overlay");
+      const stage = document.getElementById("stage");
+      const ctx = overlay.getContext("2d");
+      const gl = canvas.getContext("webgl", { antialias: true, alpha: false, preserveDrawingBuffer: true });
+      const error = document.getElementById("error");
+      function fail(message) {
+        error.textContent = message;
+        error.hidden = false;
+      }
+      if (!gl || !ctx) {
+        fail("이 브라우저에서 3D 그래픽을 시작할 수 없습니다. Chrome, Edge 또는 Safari에서 이 파일을 열고 그래픽 가속 설정을 확인해 주세요.");
+        return;
+      }
+      const MODEL = Object.freeze({
+        height: 230, livingDepth: 420, sinkClearance: 230, doorLead: 130,
+        doorWidth: 83, doorHeight: 200, doorTail: 83, sinkWidth: 140,
+        bedroomRight: 220, bedroomDepth: 320, bedroomWidth: 440, alcove: 117
+      });
+      const doorEnd = MODEL.bedroomWidth - MODEL.bedroomRight;
+      const doorStart = doorEnd - MODEL.doorWidth;
+      const livingLeft = doorStart - MODEL.doorLead;
+      const livingRight = doorEnd + MODEL.doorTail;
+      const livingWidth = livingRight - livingLeft;
+      const partition = MODEL.bedroomDepth;
+      const livingFront = partition + MODEL.livingDepth;
+      const sink = { x: livingLeft + 5, z: partition + MODEL.sinkClearance, depth: 58 };
+      const bath = { x: 0, z: MODEL.alcove, width: MODEL.alcove, depth: partition - MODEL.alcove };
+      // The sketch gives adjacency, but no measurements for this entry strip.
+      const entryDepth = 100;
+      const entryFront = livingFront + entryDepth;
+      const boiler = { x: livingLeft, z: livingFront, width: 180, depth: entryDepth };
+      const shoe = { x: boiler.x + boiler.width, z: livingFront, width: 30, depth: entryDepth };
+      const entryLeft = shoe.x + shoe.width;
+      const state = {
+        yaw: -0.55, pitch: 0.96, zoom: 1, panX: 0, panY: 0,
+        top: false, walls: 110, labels: true, dimensions: false
+      };
+      let width = 1, height = 1, dpr = 1, matrix, frame = 0;
+      let triangles = [], edges = [], annotations = [], dimensions = [], labelBounds = [];
+      const colorCanvas = document.createElement("canvas");
+      colorCanvas.width = colorCanvas.height = 1;
+      const colorContext = colorCanvas.getContext("2d", { willReadFrequently: true });
+      const styles = getComputedStyle(document.documentElement);
+      const palette = {};
+      function color(name) {
+        if (palette[name]) return palette[name];
+        colorContext.clearRect(0, 0, 1, 1);
+        colorContext.fillStyle = styles.getPropertyValue("--cp-" + name).trim();
+        colorContext.fillRect(0, 0, 1, 1);
+        const data = colorContext.getImageData(0, 0, 1, 1).data;
+        const alpha = data[3] / 255;
+        const background = name === "surface" ? [1, 1, 1] : color("surface");
+        palette[name] = [0, 1, 2].map(i => data[i] / 255 * alpha + background[i] * (1 - alpha));
+        return palette[name];
+      }
+      function compile(type, source) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          const message = "3D 그래픽 초기화 오류: " + gl.getShaderInfoLog(shader);
+          fail(message);
+          throw new Error(message);
+        }
+        return shader;
+      }
+      const program = gl.createProgram();
+      gl.attachShader(program, compile(gl.VERTEX_SHADER, `
+        attribute vec3 aPosition;
+        attribute vec3 aNormal;
+        attribute vec3 aColor;
+        uniform mat4 uMatrix;
+        uniform float uLines;
+        varying vec3 vColor;
+        void main() {
+          gl_Position = uMatrix * vec4(aPosition, 1.0);
+          float light = 0.82 + 0.18 * max(0.0, dot(aNormal, normalize(vec3(-0.4, 1.0, 0.6))));
+          vColor = aColor * mix(light, 1.0, uLines);
+        }
+      `));
+      gl.attachShader(program, compile(gl.FRAGMENT_SHADER, `
+        precision mediump float;
+        varying vec3 vColor;
+        void main() { gl_FragColor = vec4(vColor, 1.0); }
+      `));
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        fail("3D 그래픽을 시작할 수 없습니다: " + gl.getProgramInfoLog(program));
+        return;
+      }
+      gl.useProgram(program);
+      const locations = {
+        position: gl.getAttribLocation(program, "aPosition"),
+        normal: gl.getAttribLocation(program, "aNormal"),
+        color: gl.getAttribLocation(program, "aColor"),
+        matrix: gl.getUniformLocation(program, "uMatrix"),
+        lines: gl.getUniformLocation(program, "uLines")
+      };
+      const meshBuffer = gl.createBuffer(), lineBuffer = gl.createBuffer();
+      function vertex(target, point, normal, shade) {
+        target.push(...point, ...normal, ...color(shade));
+      }
+      function face(points, normal, shade) {
+        for (const index of [0, 1, 2, 0, 2, 3]) vertex(triangles, points[index], normal, shade);
+      }
+      function line(a, b, shade = "border-strong", dashed = false) {
+        if (!dashed) {
+          vertex(edges, a, [0, 1, 0], shade);
+          vertex(edges, b, [0, 1, 0], shade);
+          return;
+        }
+        const length = Math.hypot(...a.map((v, i) => b[i] - v));
+        for (let from = 0; from < length; from += 16) {
+          const to = Math.min(from + 8, length);
+          const point = distance => a.map((v, i) => v + (b[i] - v) * distance / length);
+          line(point(from), point(to), shade);
+        }
+      }
+      function box(x, z, w, d, h, base, shade, outline = false) {
+        if (h <= 0 || w <= 0 || d <= 0) return;
+        const p = [
+          [x, base, z], [x + w, base, z], [x + w, base, z + d], [x, base, z + d],
+          [x, base + h, z], [x + w, base + h, z], [x + w, base + h, z + d], [x, base + h, z + d]
+        ];
+        face([p[0], p[3], p[2], p[1]], [0, -1, 0], shade);
+        face([p[4], p[5], p[6], p[7]], [0, 1, 0], shade);
+        face([p[0], p[1], p[5], p[4]], [0, 0, -1], shade);
+        face([p[3], p[7], p[6], p[2]], [0, 0, 1], shade);
+        face([p[0], p[4], p[7], p[3]], [-1, 0, 0], shade);
+        face([p[1], p[2], p[6], p[5]], [1, 0, 0], shade);
+        if (outline) for (const [a, b] of [[4, 5], [5, 6], [6, 7], [7, 4], [0, 4], [1, 5], [2, 6], [3, 7]]) {
+          line(p[a], p[b]);
+        }
+      }
+      function floor(x, z, w, d, shade, assumed = false) {
+        box(x, z, w, d, 8, -8, shade);
+        for (let xx = Math.ceil(x / 50) * 50; xx < x + w; xx += 50) {
+          line([xx, .3, z], [xx, .3, z + d], "border");
+        }
+        for (let zz = Math.ceil(z / 50) * 50; zz < z + d; zz += 50) {
+          line([x, .3, zz], [x + w, .3, zz], "border");
+        }
+        if (assumed) {
+          const corners = [[x, 1, z], [x + w, 1, z], [x + w, 1, z + d], [x, 1, z + d]];
+          corners.forEach((p, i) => line(p, corners[(i + 1) % 4], "text-muted", true));
+        }
+      }
+      function wall(axis, fixed, start, end, openings = [], assumed = false) {
+        const flat = state.top || state.walls === 0;
+        const h = flat ? 4 : state.walls;
+        const piece = (a, b, bottom, top) => {
+          if (top <= bottom) return;
+          const shade = flat ? "border-strong" : "surface";
+          if (axis === "x") box(a, fixed - 5, b - a, 10, top - bottom, bottom, shade, !flat);
+          else box(fixed - 5, a, 10, b - a, top - bottom, bottom, shade, !flat);
+        };
+        let cursor = start;
+        for (const opening of openings) {
+          piece(cursor, opening.start, 0, h);
+          piece(opening.start, opening.end, 0, Math.min(opening.bottom, h));
+          piece(opening.start, opening.end, Math.min(opening.top, h), h);
+          if (opening.window && flat) {
+            const a = axis === "x" ? [opening.start, h + 1, fixed] : [fixed, h + 1, opening.start];
+            const b = axis === "x" ? [opening.end, h + 1, fixed] : [fixed, h + 1, opening.end];
+            line(a, b, "accent");
+          }
+          if (opening.window && h > opening.bottom) {
+            const bottom = opening.bottom;
+            const top = Math.min(opening.top, h);
+            if (axis === "x") {
+              box(opening.start, fixed - 1, opening.end - opening.start, 2, top - bottom, bottom, "border", true);
+              box((opening.start + opening.end) / 2 - 1.5, fixed - 3, 3, 6, top - bottom, bottom, "surface");
+            } else {
+              box(fixed - 1, opening.start, 2, opening.end - opening.start, top - bottom, bottom, "border", true);
+            }
+          }
+          cursor = opening.end;
+        }
+        piece(cursor, end, 0, h);
+        if (assumed) {
+          const a = axis === "x" ? [start, h + 1, fixed] : [fixed, h + 1, start];
+          const b = axis === "x" ? [end, h + 1, fixed] : [fixed, h + 1, end];
+          line(a, b, "accent", true);
+        }
+      }
+      function doorArc(x, z, radius, angle = 0, sweep = Math.PI / 2, measured = true) {
+        const shade = measured ? "accent" : "text-muted";
+        const point = fraction => {
+          const a = angle + fraction * sweep;
+          return [x + radius * Math.cos(a), 6, z + radius * Math.sin(a)];
+        };
+        for (let i = 0; i < 20; i++) {
+          line(point(i / 20), point((i + 1) / 20), shade, !measured);
+        }
+        line([x, 6, z], point(1), shade);
+      }
+      function label(text, x, z, options = {}) {
+        annotations.push({ text, point: [x, options.y || 3, z], ...options });
+      }
+      function dimension(text, a, b, detailed = false, assumed = false) {
+        dimensions.push({ text, a, b, detailed, assumed });
+      }
+      function build() {
+        triangles = []; edges = []; annotations = []; dimensions = [];
+        floor(MODEL.alcove, 0, MODEL.bedroomWidth - MODEL.alcove, MODEL.bedroomDepth, "accent-soft");
+        floor(0, 0, MODEL.alcove, MODEL.alcove, "accent-soft");
+        floor(bath.x, bath.z, bath.width, bath.depth, "border");
+        floor(livingLeft, partition, livingWidth, MODEL.livingDepth, "surface-soft");
+        floor(boiler.x, boiler.z, boiler.width, boiler.depth, "border", true);
+        floor(shoe.x, livingFront, livingRight - shoe.x, entryDepth, "surface-soft", true);
+        const windowOpening = (start, end, bottom = 85, top = 180) => ({ start, end, bottom, top, window: true });
+        const doorOpening = (start, end, top = MODEL.doorHeight) => ({ start, end, bottom: 0, top });
+        wall("x", 0, 0, MODEL.bedroomWidth, [windowOpening(190, 310)]);
+        wall("z", 0, 0, partition);
+        wall("z", MODEL.bedroomWidth, 0, partition);
+        wall("x", MODEL.alcove, 0, MODEL.alcove);
+        wall("z", MODEL.alcove, MODEL.alcove, partition, [doorOpening(164, 234, 195)]);
+        wall("x", partition, 0, MODEL.bedroomWidth, [doorOpening(doorStart, doorEnd)]);
+        wall("z", livingLeft, partition, livingFront);
+        wall("z", livingRight, partition, livingFront);
+        wall("x", livingFront, livingLeft, shoe.x, [doorOpening(livingLeft + 85, livingLeft + 157, 195)], true);
+        wall("z", livingLeft, livingFront, entryFront, [], true);
+        wall("z", livingRight, livingFront, entryFront, [doorOpening(livingFront + 14, livingFront + 94)], true);
+        wall("x", entryFront, livingLeft, livingRight, [], true);
+        doorArc(doorStart, partition, MODEL.doorWidth, 0, -Math.PI / 2);
+        doorArc(MODEL.alcove, 164, 70, Math.PI / 2, -Math.PI / 2, false);
+        doorArc(livingLeft + 85, livingFront, 72, 0, Math.PI / 2, false);
+        doorArc(livingRight, livingFront + 14, 80, Math.PI / 2, Math.PI / 2, false);
+        const flat = state.top || state.walls === 0;
+        const furnitureHeight = flat ? 8 : 85;
+        box(sink.x + 1, sink.z + 2, sink.depth - 2, MODEL.sinkWidth - 4, furnitureHeight, 0, "text-muted", true);
+        box(sink.x - 1, sink.z, sink.depth + 2, MODEL.sinkWidth, 4, furnitureHeight, "surface", true);
+        box(sink.x + 9, sink.z + 82, 40, 45, 1.2, furnitureHeight + 4, "border-strong", true);
+        box(sink.x + 15, sink.z + 88, 28, 33, 1.5, furnitureHeight + 5.2, "border");
+        box(sink.x + 10, sink.z + 10, 36, 44, 1.5, furnitureHeight + 4, "text", true);
+        for (const burner of [[sink.x + 22, sink.z + 23], [sink.x + 33, sink.z + 42]]) {
+          box(burner[0] - 5, burner[1] - 5, 10, 10, 1.5, furnitureHeight + 5.5, "border-strong");
+        }
+        if (!state.top && state.walls === MODEL.height) {
+          box(livingLeft + 1, sink.z, 32, MODEL.sinkWidth, 65, 150, "surface-soft", true);
+          box(sink.x + 8, sink.z + 102, 4, 4, 22, furnitureHeight + 4, "border-strong");
+          box(sink.x + 8, sink.z + 102, 18, 4, 4, furnitureHeight + 22, "border-strong");
+          box(330, 2, 70, 18, 25, 183, "surface-soft", true);
+        }
+        const fixtureHeight = flat ? 7 : 38;
+        box(12, 144, 42, 38, 10, fixtureHeight, "surface", true);
+        box(20, 153, 26, 21, 1, fixtureHeight + 10, "border");
+        box(25, 239, 34, 54, fixtureHeight, 0, "surface", true);
+        box(25, 284, 34, 13, flat ? 5 : 55, 0, "surface-soft", true);
+        const shoeHeight = flat ? 8 : Math.min(state.walls, 180);
+        box(shoe.x, shoe.z, shoe.width, shoe.depth, shoeHeight, 0, "text-muted", true);
+        box(boiler.x + 22, boiler.z + 52, 40, 30, flat ? 8 : Math.min(state.walls, 140), 0, "surface-soft", true);
+        label("안방", 288, 157, { major: true, accent: true });
+        label("거실", 205, 532, { major: true });
+        label("오목 공간", 59, 60, { small: true, accent: true });
+        label("욕실", 63, 210, { small: true });
+        label("싱크대 140", sink.x + 29, sink.z + 70, { y: furnitureHeight + 12, small: true });
+        label("보일러실", boiler.x + 90, boiler.z + 36, { small: true, assumed: true });
+        label("신발장", shoe.x + shoe.width / 2, shoe.z + shoe.depth / 2, { y: shoeHeight + 8, small: true, assumed: true });
+        label("현관", (entryLeft + livingRight) / 2, livingFront + 65, { small: true, assumed: true });
+        label("창문", 250, 0, { y: flat ? 9 : Math.min(state.walls, 130) + 12, small: true });
+        dimension("440", [0, 2, -36], [MODEL.bedroomWidth, 2, -36]);
+        dimension("320", [MODEL.bedroomWidth + 36, 2, 0], [MODEL.bedroomWidth + 36, 2, partition]);
+        dimension("117", [-34, 2, 0], [-34, 2, MODEL.alcove]);
+        dimension("117", [0, 7, MODEL.alcove + 17], [MODEL.alcove, 7, MODEL.alcove + 17], true);
+        dimension("420", [livingRight + 36, 2, partition], [livingRight + 36, 2, livingFront]);
+        dimension("230", [livingLeft - 38, 2, partition], [livingLeft - 38, 2, sink.z]);
+        dimension("130", [livingLeft, 7, partition + 31], [doorStart, 7, partition + 31], true);
+        dimension("83", [doorStart, 7, partition + 31], [doorEnd, 7, partition + 31], true);
+        dimension("83", [doorEnd, 7, partition + 31], [livingRight, 7, partition + 31], true);
+        dimension("220", [doorEnd, 7, partition - 28], [MODEL.bedroomWidth, 7, partition - 28], true);
+        dimension("140", [sink.x + sink.depth + 20, 7, sink.z], [sink.x + sink.depth + 20, 7, sink.z + MODEL.sinkWidth], true);
+        dimension("296 · 합산", [livingLeft, 2, entryFront + 30], [livingRight, 2, entryFront + 30], true);
+        dimension("문 83 × 200", [doorStart, flat ? 7 : Math.min(state.walls, 200) + 12, partition],
+          [doorEnd, flat ? 7 : Math.min(state.walls, 200) + 12, partition], true);
+        gl.bindBuffer(gl.ARRAY_BUFFER, meshBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(triangles), gl.STATIC_DRAW);
+        gl.bindBuffer(gl.ARRAY_BUFFER, lineBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(edges), gl.STATIC_DRAW);
+        requestDraw();
+      }
+      // Orthographic orbit projection keeps every measured length in the same scale.
+      function makeMatrix() {
+        const yaw = state.top ? 0 : state.yaw;
+        const pitch = state.top ? Math.PI / 2 : state.pitch;
+        const right = [Math.cos(yaw), 0, -Math.sin(yaw)];
+        const up = [-Math.sin(pitch) * Math.sin(yaw), Math.cos(pitch), -Math.sin(pitch) * Math.cos(yaw)];
+        const toward = [Math.cos(pitch) * Math.sin(yaw), Math.sin(pitch), Math.cos(pitch) * Math.cos(yaw)];
+        const wallHeight = state.top ? 0 : state.walls;
+        const center = [MODEL.bedroomWidth / 2, wallHeight / 2, entryFront / 2];
+        const extentX = (MODEL.bedroomWidth + 90) * Math.abs(right[0]) + (entryFront + 90) * Math.abs(right[2]);
+        const extentY = (MODEL.bedroomWidth + 90) * Math.abs(up[0]) +
+          (entryFront + 90) * Math.abs(up[2]) + wallHeight * Math.abs(up[1]);
+        const topInset = width < 600 ? 92 : 40;
+        const bottomInset = width < 600 ? 24 : 40;
+        const scale = Math.min((width - 36) / extentX, (height - topInset - bottomInset) / extentY) * state.zoom;
+        const row = (vector, factor, offset) => [
+          ...vector.map(value => value * factor),
+          offset - vector.reduce((sum, value, i) => sum + value * center[i] * factor, 0)
+        ];
+        const rx = row(right, 2 * scale / width, 2 * state.panX / width);
+        const ry = row(up, 2 * scale / height, -2 * (state.panY + (topInset - bottomInset) / 2) / height);
+        const rz = row(toward, -1 / 2400, 0);
+        return new Float32Array([
+          rx[0], ry[0], rz[0], 0, rx[1], ry[1], rz[1], 0,
+          rx[2], ry[2], rz[2], 0, rx[3], ry[3], rz[3], 1
+        ]);
+      }
+      function project(point) {
+        const p = [...point, 1];
+        const component = index => p.reduce((sum, value, i) => sum + value * matrix[i * 4 + index], 0);
+        return [(component(0) + 1) * width / 2, (1 - component(1)) * height / 2];
+      }
+      function badge(text, point, options = {}) {
+        const [anchorX, anchorY] = project(point);
+        const size = options.major ? 21 : options.small ? 11 : 12;
+        ctx.font = `${options.major ? 650 : 500} ${size}px "Segoe UI", -apple-system, sans-serif`;
+        const w = ctx.measureText(text).width + 14, h = size + 12;
+        const x = Math.max(w / 2 + 4, Math.min(width - w / 2 - 4, anchorX));
+        let y = anchorY;
+        for (const offset of [0, -26, 26, -52, 52, -78, 78]) {
+          const candidate = Math.max(h / 2 + 4, Math.min(height - h / 2 - 4, anchorY + offset));
+          if (!labelBounds.some(rect => x - w / 2 < rect.right + 3 && x + w / 2 > rect.left - 3 &&
+            candidate - h / 2 < rect.bottom + 3 && candidate + h / 2 > rect.top - 3)) {
+            y = candidate;
+            break;
+          }
+        }
+        labelBounds.push({ left: x - w / 2, right: x + w / 2, top: y - h / 2, bottom: y + h / 2 });
+        if (Math.hypot(x - anchorX, y - anchorY) > 4) {
+          ctx.strokeStyle = styles.getPropertyValue("--cp-border-strong").trim();
+          ctx.lineWidth = .8;
+          ctx.beginPath(); ctx.moveTo(anchorX, anchorY); ctx.lineTo(x, y); ctx.stroke();
+        }
+        ctx.fillStyle = styles.getPropertyValue("--cp-panel-strong").trim();
+        ctx.strokeStyle = styles.getPropertyValue(options.accent ? "--cp-accent" : "--cp-border").trim();
+        ctx.lineWidth = .8;
+        ctx.setLineDash(options.assumed ? [3, 3] : []);
+        ctx.beginPath();
+        ctx.roundRect(x - w / 2, y - h / 2, w, h, 5);
+        ctx.fill();
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = styles.getPropertyValue(options.accent ? "--cp-accent" : "--cp-text").trim();
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(text, x, y);
+      }
+      function drawDimensions() {
+        for (const item of dimensions) {
+          if (item.detailed && !state.dimensions) continue;
+          const a = project(item.a), b = project(item.b);
+          const length = Math.hypot(b[0] - a[0], b[1] - a[1]);
+          if (length < 8) continue;
+          const nx = -(b[1] - a[1]) / length * 4, ny = (b[0] - a[0]) / length * 4;
+          ctx.strokeStyle = styles.getPropertyValue(item.assumed ? "--cp-accent" : "--cp-text-muted").trim();
+          ctx.lineWidth = 1;
+          ctx.setLineDash(item.assumed ? [4, 4] : []);
+          ctx.beginPath();
+          ctx.moveTo(...a); ctx.lineTo(...b);
+          for (const p of [a, b]) { ctx.moveTo(p[0] - nx, p[1] - ny); ctx.lineTo(p[0] + nx, p[1] + ny); }
+          ctx.stroke();
+          ctx.setLineDash([]);
+          badge(item.text, item.a.map((v, i) => (v + item.b[i]) / 2), { small: true, assumed: item.assumed });
+        }
+      }
+      function bind(buffer) {
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        for (const [location, offset] of [[locations.position, 0], [locations.normal, 12], [locations.color, 24]]) {
+          gl.enableVertexAttribArray(location);
+          gl.vertexAttribPointer(location, 3, gl.FLOAT, false, 36, offset);
+        }
+      }
+      function draw() {
+        frame = 0;
+        matrix = makeMatrix();
+        gl.viewport(0, 0, canvas.width, canvas.height);
+        gl.clearColor(...color("bg-elevated"), 1);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.enable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.LEQUAL);
+        gl.uniformMatrix4fv(locations.matrix, false, matrix);
+        gl.uniform1f(locations.lines, 0);
+        gl.enable(gl.POLYGON_OFFSET_FILL);
+        gl.polygonOffset(1, 1);
+        bind(meshBuffer);
+        gl.drawArrays(gl.TRIANGLES, 0, triangles.length / 9);
+        gl.disable(gl.POLYGON_OFFSET_FILL);
+        gl.uniform1f(locations.lines, 1);
+        bind(lineBuffer);
+        gl.drawArrays(gl.LINES, 0, edges.length / 9);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, width, height);
+        labelBounds = [];
+        drawDimensions();
+        if (state.labels) for (const item of annotations) badge(item.text, item.point, item);
+        document.getElementById("viewStatus").textContent = state.top ? "평면도 · 손그림과 같은 방향" :
+          state.walls === 0 ? "바닥만 표시" : state.walls === MODEL.height ? "전체 높이 약 230 cm" : `벽 ${state.walls} cm 절개`;
+      }
+      function requestDraw() { if (!frame) frame = requestAnimationFrame(draw); }
+      function resize() {
+        width = stage.clientWidth; height = stage.clientHeight;
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = overlay.width = Math.round(width * dpr);
+        canvas.height = overlay.height = Math.round(height * dpr);
+        requestDraw();
+      }
+      function setView(top) {
+        state.top = top;
+        document.getElementById("view3d").setAttribute("aria-pressed", String(!top));
+        document.getElementById("viewTop").setAttribute("aria-pressed", String(top));
+        document.getElementById("wallMode").disabled = top;
+        document.getElementById("rotateLeft").disabled = top;
+        document.getElementById("rotateRight").disabled = top;
+        build();
+      }
+      function zoomBy(factor) {
+        state.zoom = Math.max(.5, Math.min(2.8, state.zoom * factor));
+        requestDraw();
+      }
+      document.getElementById("view3d").addEventListener("click", () => setView(false));
+      document.getElementById("viewTop").addEventListener("click", () => setView(true));
+      document.getElementById("rotateLeft").addEventListener("click", () => { state.yaw -= Math.PI / 6; requestDraw(); });
+      document.getElementById("rotateRight").addEventListener("click", () => { state.yaw += Math.PI / 6; requestDraw(); });
+      document.getElementById("zoomIn").addEventListener("click", () => zoomBy(1.18));
+      document.getElementById("zoomOut").addEventListener("click", () => zoomBy(1 / 1.18));
+      document.getElementById("wallMode").addEventListener("change", event => { state.walls = Number(event.target.value); build(); });
+      document.getElementById("labels").addEventListener("change", event => { state.labels = event.target.checked; requestDraw(); });
+      document.getElementById("dimensions").addEventListener("change", event => { state.dimensions = event.target.checked; requestDraw(); });
+      document.getElementById("reset").addEventListener("click", () => {
+        Object.assign(state, { yaw: -.55, pitch: .96, zoom: 1, panX: 0, panY: 0, walls: 110 });
+        document.getElementById("wallMode").value = "110";
+        setView(false);
+      });
+      canvas.addEventListener("wheel", event => {
+        event.preventDefault();
+        zoomBy(Math.exp(-event.deltaY * .0012));
+      }, { passive: false });
+      const pointers = new Map();
+      let pinchDistance = null;
+      canvas.addEventListener("pointerdown", event => {
+        canvas.focus({ preventScroll: true });
+        canvas.setPointerCapture(event.pointerId);
+        pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+        pinchDistance = null;
+      });
+      canvas.addEventListener("pointermove", event => {
+        const previous = pointers.get(event.pointerId);
+        if (!previous) return;
+        pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+        if (pointers.size === 2) {
+          const [a, b] = [...pointers.values()];
+          const distance = Math.hypot(a.x - b.x, a.y - b.y);
+          if (pinchDistance && distance > 0) zoomBy(distance / pinchDistance);
+          pinchDistance = distance;
+          return;
+        }
+        const dx = event.clientX - previous.x, dy = event.clientY - previous.y;
+        if (event.shiftKey || state.top) { state.panX += dx; state.panY += dy; }
+        else { state.yaw += dx * .006; state.pitch = Math.max(.35, Math.min(1.45, state.pitch + dy * .005)); }
+        requestDraw();
+      });
+      function release(event) { pointers.delete(event.pointerId); pinchDistance = null; }
+      canvas.addEventListener("pointerup", release);
+      canvas.addEventListener("pointercancel", release);
+      canvas.addEventListener("lostpointercapture", release);
+      canvas.addEventListener("keydown", event => {
+        if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "+", "=", "-"].includes(event.key)) return;
+        event.preventDefault();
+        if (event.key === "+" || event.key === "=") zoomBy(1.12);
+        else if (event.key === "-") zoomBy(1 / 1.12);
+        else if (state.top) {
+          state.panX += event.key === "ArrowLeft" ? -20 : event.key === "ArrowRight" ? 20 : 0;
+          state.panY += event.key === "ArrowUp" ? -20 : event.key === "ArrowDown" ? 20 : 0;
+        } else {
+          state.yaw += event.key === "ArrowLeft" ? -.12 : event.key === "ArrowRight" ? .12 : 0;
+          state.pitch = Math.max(.35, Math.min(1.45, state.pitch + (event.key === "ArrowUp" ? .08 : event.key === "ArrowDown" ? -.08 : 0)));
+        }
+        requestDraw();
+      });
+      canvas.addEventListener("webglcontextlost", event => {
+        event.preventDefault();
+        fail("3D 그래픽 연결이 중단되었습니다. 페이지를 새로고침해 주세요.");
+      });
+      new ResizeObserver(resize).observe(stage);
+      new MutationObserver(() => {
+        for (const key of Object.keys(palette)) delete palette[key];
+        build();
+      }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+      build();
+      resize();
+    })();
+  </script>
+</body>
+</html>
