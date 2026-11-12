@@ -273,7 +273,7 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 </tr>
 <tr>
 <td>Azure 구독</td>
-<td>Owner</td>
+<td>구독의 소유자 권한 (Owner)</td>
 <td>구독 연결 / 과금 설정</td>
 </tr>
 <tr>
@@ -288,8 +288,13 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 </tr>
 <tr>
 <td>Entra 보안 그룹</td>
-<td>n/a</td>
+<td>n/a (향후 추가될 사용자를 Entra 보안 그룹으로 관리할지, 아니면 개별적으로 Entra EMU App에 등록할지 여부에 따라 생성 여부 판단)</td>
 <td>GitHub으로 프로비저닝 자동화를 위한 Entra 보안 그룹</td>
+</tr>
+<tr>
+<td>개인 GitHub 계정</td>
+<td>n/a (셋업 하시는 분의 개인 메일 주소로 로그인할 수 있는 GitHub 계정 - outlook, gmail 등)</td>
+<td>최초 설정 시 깃헙으로부터 메일 수신을 원활히 하기 위한 용도</td>
 </tr>
 </tbody>
 </table>
@@ -364,17 +369,17 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 <div class="content">
 <div class="lbl">작업 절차</div>
 <ol class="proc">
-<li>메일은 위에서 열어 놓은 브라우저 창이 아니라 <b>메일 앱 또는 별도 브라우저</b>에서 확인</li>
-<li>GitHub 발송 초대 메일 수신 &mdash; 제목: <span class="inline">[GitHub] You've been added as an owner</span></li>
-<li>메일의 <b>&ldquo;Set your password&rdquo; 버튼을 누르지 말고</b>, 링크를 복사하여 위에서 열어 놓은 브라우저의 새 탭에 붙여 넣기</li>
-<li>셋업 계정의 암호 설정 : <span class="inline">&lt;shortcode&gt;_admin</span> <span style="color: var(--muted);">(예: aiaod_admin)</span></li>
+<li>메일은 위에서 열어 놓은 브라우저 창이 아니라 <b>메일 앱 또는 별도 브라우저</b>에서 확인하시길 권고</li>
+<li>GitHub에서&nbsp; 발송된 2통의 초대 메일 중,&nbsp; 제목이&nbsp;&nbsp;<span class="inline">[GitHub] You've been added as an owner</span>로 된 메일 확인</li>
+<li>메일의&nbsp;<b>&ldquo;Set your password&rdquo; 버튼을 누르지 말고</b>, 링크를 복사하여 위에서 열어 놓은 브라우저의 새 탭에 붙여 넣기</li>
+<li>셋업 계정의 암호 설정</li>
 <li>암호 설정 후 최초 관리 페이지 로그인</li>
 </ol>
 <div class="lbl">관리 페이지 URL</div>
 <div class="pathbox"><span class="u">https://github.com/enterprises/&lt;your-enterprise-slug&gt;</span></div>
 <div class="callout tip">
 <p class="ct">💡 Tip</p>
-<p>이 셋업 계정 <span class="inline">&lt;shortcode&gt;_admin</span>은 <b>Break-glass(비상용) 관리자 계정</b>이라고도 불립니다. 초기 셋업에서만 주로 쓰이고, 실제 운영은 별도 Enterprise Owner로 진행합니다.</p>
+<p>이 셋업 계정 <span class="inline">&lt;shortcode&gt;_admin</span> (예: aiaod_admin) 은 <b>Break-glass(비상용) 관리자 계정</b>이라고도 불립니다. 초기 셋업에서만 주로 쓰이고, 실제 운영은 별도 Enterprise Owner로 진행합니다.</p>
 </div>
 <div class="lbl">공식 문서</div>
 <ul class="docs">
