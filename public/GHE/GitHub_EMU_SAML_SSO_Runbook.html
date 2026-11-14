@@ -175,7 +175,7 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 <tbody>
 <tr>
 <th>문서 제목</th>
-<td>EMU + SAML SSO + SCIM Production 구축 런북</td>
+<td>GitHub EMU + SSO + Provision 구축 런북</td>
 </tr>
 <tr>
 <th>대상 독자</th>
@@ -227,8 +227,7 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 </ol>
 </nav><!-- 1. 개요 -->
 <h2 class="sec" id="s1">1. 개요 및 배경</h2>
-<p>본 런북은 신규 Microsoft Entra ID 테넌트와 Azure 구독을 기준으로 <b>GitHub Enterprise Cloud의 Enterprise Managed Users(EMU)</b> 환경을 처음부터 구축하고, <b>SAML SSO 및 SCIM 자동 프로비저닝</b>을 구성하는 전체 절차를 단계별로 정리한 문서입니다.</p>
-<p>2026년 6월 1일부로 GitHub Copilot이 <b>사용량 기반(Usage-based / AI Credit) 과금</b>으로 전환됨에 따라, 기존의 &lsquo;트라이얼 기반 평가&rsquo; 방식보다는 <b>Production EMU Enterprise를 생성하고 Azure 구독을 직접 연결하는 방식</b>을 권장합니다.</p>
+<p>본 런북은, 신규 Microsoft Entra ID 테넌트와 Azure 구독을 기준으로 <b>GitHub Enterprise Cloud의 Enterprise Managed Users(EMU)</b> 환경을 처음부터 구축하고, <span style="text-decoration: underline;"><strong>&#x31;&#xFE0F;&#x20E3; </strong></span><b><span style="text-decoration: underline;">SAML SSO</span> 및 <span style="text-decoration: underline;">&#x32;&#xFE0F;&#x20E3; SCIM 자동 프로비저닝</span></b>을 구성하는 전체 절차를 단계별로 정리하였고, 더불어, 2026년 6월 1일부로 GitHub Copilot이&nbsp;<b>사용량 기반(Usage-Based Billing / AI Credit) 과금</b>으로 전환됨에 따라, <span style="text-decoration: underline;"><strong>&#x33;&#xFE0F;&#x20E3; 초기 버짓 설정 </strong></span>등도 포함한 가이드입니다.&nbsp;</p>
 <h3 class="sub" id="s11">1.1 전체 구축 흐름</h3>
 <div class="flow">
 <div class="fi gh"><span class="n">1</span>EMU Enterprise 생성</div>
