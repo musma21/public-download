@@ -93,6 +93,8 @@ p{margin:10px 0}
 .role.gh{background:#eef1f4; color:#1f2328; border-color:#d1d9e0}
 .role.az{background:#e5f1fb; color:#0a4a86; border-color:#bcdcf5}
 .step > .content{padding:18px 22px 22px}
+.back-to-toc{margin-top:16px; text-align:right}
+.back-to-toc a{color:var(--blue); font-size:12px}
 
 /* labels inside step */
 .lbl{font-size:12.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase;
@@ -204,7 +206,7 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 </tr>
 </tbody>
 </table>
-<!-- TOC --><nav class="toc">
+<!-- TOC --><nav class="toc" id="toc">
 <h2>목차</h2>
 <ol>
 <li class="lead"><span class="num">1.</span><a href="#s1">개요 및 배경</a></li>
@@ -239,17 +241,17 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 <span class="arrow">&rarr;</span>
 <div class="fi gh"><span class="n">4</span><a href="#st3">SCIM Token (PAT) 생성</a></div>
 <span class="arrow">&rarr;</span>
-<div class="fi az"><span class="n">5</span><a href="#st5">Entra EMU 앱 &middot; 추가 (by Entra Admin)</a></div>
+<div class="fi az"><span class="n">5</span><a href="#st5">Entra EMU 앱 &middot; 추가</a></div>
 <span class="arrow">&rarr;</span>
-<div class="fi az"><span class="n">6</span><a href="#st6">Entra EMU 앱 &middot; SAML SSO (by Entra Admin)</a></div>
+<div class="fi az"><span class="n">6</span><a href="#st6">Entra EMU 앱 &middot; SAML SSO</a></div>
 <span class="arrow">&rarr;</span>
-<div class="fi az"><span class="n">7</span><a href="#st7">Entra EMU 앱 &middot; 사용자&middot;그룹 할당 (by Entra Admin)</a></div>
+<div class="fi az"><span class="n">7</span><a href="#st7">Entra EMU 앱 &middot; 사용자&middot;그룹 할당</a></div>
 <span class="arrow">&rarr;</span>
 <div class="fi gh"><span class="n">8</span><a href="#st8">SAML SSO &middot; GitHub 적용</a></div>
 <span class="arrow">&rarr;</span>
-<div class="fi az"><span class="n">9</span><a href="#st9">SCIM 프로비저닝 설정 (by Entra Admin)</a></div>
+<div class="fi az"><span class="n">9</span><a href="#st9">SCIM 프로비저닝 설정</a></div>
 <span class="arrow">&rarr;</span>
-<div class="fi az"><span class="n">10</span><a href="#st10">User/Group 프로비저닝 활성화 (by Entra Admin)</a></div>
+<div class="fi az"><span class="n">10</span><a href="#st10">User/Group 프로비저닝 활성화</a></div>
 <span class="arrow">&rarr;</span>
 <div class="fi gh"><span class="n">11</span><a href="#st11">GitHub 사용자 생성 확인</a></div>
 <span class="arrow">&rarr;</span>
@@ -356,6 +358,7 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 <li><a href="https://docs.github.com/en/enterprise-cloud@latest/admin/overview/setting-up-a-trial-of-github-enterprise-cloud">Setting up a trial of GitHub Enterprise Cloud</a></li>
 <li><a href="https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/getting-started-with-enterprise-managed-users">Getting started with Enterprise Managed Users</a></li>
 </ul>
+<div class="back-to-toc"><a href="#toc">&uarr; 목차로</a></div>
 </div>
 </section>
 <!-- STEP 2 -->
@@ -386,6 +389,7 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 <li><a href="https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/getting-started-with-enterprise-managed-users">Getting started with EMU (Setup user)</a></li>
 <li><a href="https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/managing-recovery-codes-for-your-enterprise/downloading-your-enterprise-accounts-single-sign-on-recovery-codes">Downloading enterprise SSO recovery codes</a></li>
 </ul>
+<div class="back-to-toc"><a href="#toc">&uarr; 목차로</a></div>
 </div>
 </section>
 <!-- STEP 3 (SCIM Token) -->
@@ -410,6 +414,7 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 <ul class="docs">
 <li><a href="https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/provisioning-user-accounts-with-scim/configuring-scim-provisioning-for-users">Configuring SCIM provisioning for EMU</a></li>
 </ul>
+<div class="back-to-toc"><a href="#toc">&uarr; 목차로</a></div>
 </div>
 </section>
 <!-- STEP 4 (Azure 구독 연결) -->
@@ -454,6 +459,7 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 <li><a href="https://docs.github.com/en/enterprise-cloud@latest/billing/reference/azure-billing">Azure billing 개요</a></li>
 <li><a href="https://docs.github.com/en/copilot/reference/copilot-billing/azure-billing">GitHub Copilot billing through Azure</a></li>
 </ul>
+<div class="back-to-toc"><a href="#toc">&uarr; 목차로</a></div>
 </div>
 </section>
 <!-- STEP 5 (Entra 앱 추가) -->
@@ -486,6 +492,7 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 <ul class="docs">
 <li><a href="https://learn.microsoft.com/en-us/entra/identity/saas-apps/github-enterprise-managed-user-tutorial">Adding GitHub EMU from the gallery</a></li>
 </ul>
+<div class="back-to-toc"><a href="#toc">&uarr; 목차로</a></div>
 </div>
 </section>
 <!-- STEP 6 (SAML SSO) -->
@@ -538,6 +545,7 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 <ul class="docs">
 <li><a href="https://learn.microsoft.com/en-us/entra/identity/saas-apps/github-enterprise-managed-user-tutorial#configure-microsoft-entra-sso">Configure Microsoft Entra SSO</a></li>
 </ul>
+<div class="back-to-toc"><a href="#toc">&uarr; 목차로</a></div>
 </div>
 </section>
 <!-- STEP 7 (사용자/그룹 할당) -->
@@ -560,6 +568,7 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 <ul class="docs">
 <li><a href="https://learn.microsoft.com/en-us/entra/identity/saas-apps/github-enterprise-managed-user-tutorial#assign-the-microsoft-entra-test-user">Assign the Microsoft Entra test user</a></li>
 </ul>
+<div class="back-to-toc"><a href="#toc">&uarr; 목차로</a></div>
 </div>
 </section>
 <!-- STEP 8 (SAML 적용) -->
@@ -617,6 +626,7 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 <ul class="docs">
 <li><a href="https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/configuring-authentication-for-enterprise-managed-users/configuring-saml-single-sign-on-for-enterprise-managed-users">Configuring SAML SSO for Enterprise Managed Users</a></li>
 </ul>
+<div class="back-to-toc"><a href="#toc">&uarr; 목차로</a></div>
 </div>
 </section>
 <!-- STEP 9 (SCIM 프로비저닝 설정) -->
@@ -658,6 +668,7 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 <ul class="docs">
 <li><a href="https://learn.microsoft.com/en-us/entra/identity/saas-apps/github-enterprise-managed-user-provisioning-tutorial">Configure automatic user provisioning (SCIM)</a></li>
 </ul>
+<div class="back-to-toc"><a href="#toc">&uarr; 목차로</a></div>
 </div>
 </section>
 <!-- STEP 10 (프로비저닝 활성화) -->
@@ -690,6 +701,7 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 <ul class="docs">
 <li><a href="https://learn.microsoft.com/en-us/entra/identity/saas-apps/github-enterprise-managed-user-provisioning-tutorial">Provisioning deployment &amp; scope</a></li>
 </ul>
+<div class="back-to-toc"><a href="#toc">&uarr; 목차로</a></div>
 </div>
 </section>
 <!-- STEP 11 (사용자 생성 확인) -->
@@ -716,6 +728,7 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 <ul class="docs">
 <li><a href="https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/configuring-authentication-for-enterprise-managed-users/configuring-saml-single-sign-on-for-enterprise-managed-users">GitHub SAML SSO 문서</a></li>
 </ul>
+<div class="back-to-toc"><a href="#toc">&uarr; 목차로</a></div>
 </div>
 </section>
 <!-- STEP 12 (Organization/Team) -->
@@ -738,6 +751,7 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 <li>상단 메뉴 <b>Repositories</b> 선택 &rarr; 최초 레포(Repository) 생성</li>
 <li>생성 후 <b>&ldquo;Add teams and collaborators&rdquo;</b> 버튼으로 레포를 사용할 사용자&middot;팀을 선택</li>
 </ol>
+<div class="back-to-toc"><a href="#toc">&uarr; 목차로</a></div>
 </div>
 </section>
 <!-- STEP 13 (Billing/Licensing) -->
@@ -778,6 +792,7 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 <ul class="docs">
 <li><a href="https://docs.github.com/en/copilot/concepts/billing/organizations-and-enterprises">Copilot billing (organizations &amp; enterprises)</a></li>
 </ul>
+<div class="back-to-toc"><a href="#toc">&uarr; 목차로</a></div>
 </div>
 </section>
 <!-- STEP 14 (Copilot 정책) -->
@@ -822,6 +837,7 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 <li><a href="https://docs.github.com/en/copilot/concepts/billing/organizations-and-enterprises">Copilot billing (organizations &amp; enterprises)</a></li>
 <li><a href="https://www.korgithub.com/Ch6.Copilot/04.GHE-start-cfb.html">Copilot Business 시작 (한국어)</a></li>
 </ul>
+<div class="back-to-toc"><a href="#toc">&uarr; 목차로</a></div>
 </div>
 </section>
 <!-- STEP 15 (Budget) -->
@@ -862,6 +878,7 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 <p>Payment Method를 Azure로 선택하면 Billing Tenant ID 선택 후 Azure 구독 ID가 표시됩니다. 확신이 없다면 <b>M365 관리자 또는 Azure 구독 소유자</b>에게 문의하십시오.</p>
 <p>⏱️ Activation 이후 GitHub Enterprise 및 GitHub Advanced Security의 트라이얼은 종료됩니다.</p>
 </div>
+<div class="back-to-toc"><a href="#toc">&uarr; 목차로</a></div>
 </div>
 </section>
 <!-- 부록 -->
