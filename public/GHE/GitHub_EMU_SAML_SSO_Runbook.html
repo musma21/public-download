@@ -69,6 +69,7 @@ p{margin:10px 0}
 .flow{display:flex; flex-wrap:wrap; gap:9px; align-items:stretch; margin:14px 0 6px}
 .flow .fi{display:flex; align-items:center; gap:9px; background:var(--soft);
   border:1px solid var(--line); border-radius:10px; padding:9px 13px; font-size:13.5px; font-weight:600}
+.flow .fi a{color:inherit}
 .flow .fi .n{display:inline-flex; align-items:center; justify-content:center;
   width:22px; height:22px; border-radius:50%; background:var(--ghdark); color:#fff;
   font-size:12px; font-weight:700; flex:none}
@@ -212,12 +213,12 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 <li><span class="num">STEP 2</span><a href="#st2">셋업 계정 암호 설정</a></li>
 <li><span class="num">STEP 3</span><a href="#st3">SCIM Token (PAT) 생성</a></li>
 <li><span class="num">STEP 4</span><a href="#st4">Azure 구독 연결 (과금)</a></li>
-<li><span class="num">STEP 5</span><a href="#st5">Entra EMU 앱 &middot; 추가</a></li>
-<li><span class="num">STEP 6</span><a href="#st6">Entra EMU 앱 &middot; SAML SSO</a></li>
-<li><span class="num">STEP 7</span><a href="#st7">Entra EMU 앱 &middot; 사용자&middot;그룹 할당</a></li>
+<li><span class="num">STEP 5</span><a href="#st5">Entra EMU 앱 &middot; 추가 (by <span style="text-decoration: underline;">Entra Admin</span>)</a></li>
+<li><span class="num">STEP 6</span><a href="#st6">Entra EMU 앱 &middot; SAML SSO (by <span style="text-decoration: underline;">Entra Admin</span>)</a></li>
+<li><span class="num">STEP 7</span><a href="#st7">Entra EMU 앱 &middot; 사용자&middot;그룹 할당 (by <span style="text-decoration: underline;">Entra Admin</span>)</a></li>
 <li><span class="num">STEP 8</span><a href="#st8">SAML SSO &middot; GitHub 적용</a></li>
-<li><span class="num">STEP 9</span><a href="#st9">SCIM 프로비저닝 설정</a></li>
-<li><span class="num">STEP 10</span><a href="#st10">User/Group 프로비저닝 활성화</a></li>
+<li><span class="num">STEP 9</span><a href="#st9">SCIM 프로비저닝 설정 (by <span style="text-decoration: underline;">Entra Admin</span>)</a></li>
+<li><span class="num">STEP 10</span><a href="#st10">User/Group 프로비저닝 활성화 (by <span style="text-decoration: underline;">Entra Admin</span>)</a></li>
 <li><span class="num">STEP 11</span><a href="#st11">GitHub 사용자 생성 확인</a></li>
 <li><span class="num">STEP 12</span><a href="#st12">Organization&middot;Team 생성</a></li>
 <li><span class="num">STEP 13</span><a href="#st13">Billing and Licensing</a></li>
@@ -227,38 +228,38 @@ table.d tr:nth-child(even) td{background:#fbfcfd}
 </ol>
 </nav><!-- 1. 개요 -->
 <h2 class="sec" id="s1">1. 개요 및 배경</h2>
-<p>본 런북은, 신규 Microsoft Entra ID 테넌트와 Azure 구독을 기준으로 <b>GitHub Enterprise Cloud의 Enterprise Managed Users(EMU)</b> 환경을 처음부터 구축하고, <span style="text-decoration: underline;"><strong>1️⃣ </strong></span><b><span style="text-decoration: underline;">SAML SSO</span> 및 <span style="text-decoration: underline;">2️⃣ SCIM 자동 프로비저닝</span></b>을 구성하는 전체 절차를 단계별로 정리하였고, 더불어, 2026년 6월 1일부로 GitHub Copilot이&nbsp;<b>사용량 기반(Usage-Based Billing / AI Credit) 과금</b>으로 전환됨에 따라, <span style="text-decoration: underline;"><strong>3️⃣ 초기 버짓 설정 </strong></span>등도 포함한 가이드입니다.&nbsp;<br>(아래 단계 중 <span aria-hidden="true" style="display: inline-block; width: 21px; height: 21px; border-radius: 50%; background: #1f2328; vertical-align: -4px; margin-right: 5px;"></span><strong style="font-size: 1.05em; color: #1f2328;">검은색</strong>은 GitHub EMU Admin, <span aria-hidden="true" style="display: inline-block; width: 21px; height: 21px; border-radius: 50%; background: #0a4a86; vertical-align: -4px; margin-right: 5px;"></span><strong style="font-size: 1.05em; color: #0a4a86;">파란색</strong>은 Entra Admin이 수행할 작업)</p>
+<p>본 런북은, 신규 Microsoft Entra ID 테넌트와 Azure 구독을 기준으로 <b>GitHub Enterprise Cloud의 Enterprise Managed Users(EMU)</b> 환경을 처음부터 구축하고, <span style="text-decoration: underline;"><strong>1️⃣ </strong></span><b><span style="text-decoration: underline;">SAML SSO</span> 및 <span style="text-decoration: underline;">2️⃣ SCIM 자동 프로비저닝</span></b>을 구성하는 전체 절차를 단계별로 정리하였고, 더불어, 2026년 6월 1일부로 GitHub Copilot이&nbsp;<b>사용량 기반(Usage-Based Billing / AI Credit) 과금</b>으로 전환됨에 따라, <span style="text-decoration: underline;"><strong>3️⃣ 초기 버짓 설정 </strong></span>등도 포함한 가이드입니다.&nbsp;<br><br>(아래 단계 중 <span aria-hidden="true" style="display: inline-block; width: 21px; height: 21px; border-radius: 50%; background: #1f2328; vertical-align: -4px; margin-right: 5px;"></span><strong style="font-size: 1.05em; color: #1f2328;">검은색</strong>은 GitHub EMU Admin, <span aria-hidden="true" style="display: inline-block; width: 21px; height: 21px; border-radius: 50%; background: #0a4a86; vertical-align: -4px; margin-right: 5px;"></span><strong style="font-size: 1.05em; color: #0a4a86;">파란색</strong>은 Entra Admin이 수행할 작업)</p>
 <h3 class="sub" id="s11">1.1 전체 구축 흐름</h3>
 <div class="flow">
-<div class="fi gh"><span class="n">1</span>EMU Enterprise 생성</div>
+<div class="fi gh"><span class="n">1</span><a href="#st1">EMU Enterprise 생성</a></div>
 <span class="arrow">&rarr;</span>
-<div class="fi gh"><span class="n">2</span>셋업 계정 암호 설정</div>
+<div class="fi gh"><span class="n">2</span><a href="#st2">셋업 계정 암호 설정</a></div>
 <span class="arrow">&rarr;</span>
-<div class="fi gh"><span class="n">3</span>Azure 구독 연결 (과금)</div>
+<div class="fi gh"><span class="n">3</span><a href="#st4">Azure 구독 연결 (과금)</a></div>
 <span class="arrow">&rarr;</span>
-<div class="fi gh"><span class="n">4</span>SCIM Token 생성</div>
+<div class="fi gh"><span class="n">4</span><a href="#st3">SCIM Token (PAT) 생성</a></div>
 <span class="arrow">&rarr;</span>
-<div class="fi az"><span class="n">5</span>Entra 앱 추가</div>
+<div class="fi az"><span class="n">5</span><a href="#st5">Entra EMU 앱 &middot; 추가 (by Entra Admin)</a></div>
 <span class="arrow">&rarr;</span>
-<div class="fi az"><span class="n">6</span>SAML SSO 설정 (Entra)</div>
+<div class="fi az"><span class="n">6</span><a href="#st6">Entra EMU 앱 &middot; SAML SSO (by Entra Admin)</a></div>
 <span class="arrow">&rarr;</span>
-<div class="fi az"><span class="n">7</span>사용자&middot;그룹 할당</div>
+<div class="fi az"><span class="n">7</span><a href="#st7">Entra EMU 앱 &middot; 사용자&middot;그룹 할당 (by Entra Admin)</a></div>
 <span class="arrow">&rarr;</span>
-<div class="fi gh"><span class="n">8</span>GitHub SAML 적용 + 테스트</div>
+<div class="fi gh"><span class="n">8</span><a href="#st8">SAML SSO &middot; GitHub 적용</a></div>
 <span class="arrow">&rarr;</span>
-<div class="fi az"><span class="n">9</span>SCIM 프로비저닝 설정</div>
+<div class="fi az"><span class="n">9</span><a href="#st9">SCIM 프로비저닝 설정 (by Entra Admin)</a></div>
 <span class="arrow">&rarr;</span>
-<div class="fi az"><span class="n">10</span>User/Group 프로비저닝 On</div>
+<div class="fi az"><span class="n">10</span><a href="#st10">User/Group 프로비저닝 활성화 (by Entra Admin)</a></div>
 <span class="arrow">&rarr;</span>
-<div class="fi gh"><span class="n">11</span>사용자 생성 확인</div>
+<div class="fi gh"><span class="n">11</span><a href="#st11">GitHub 사용자 생성 확인</a></div>
 <span class="arrow">&rarr;</span>
-<div class="fi gh"><span class="n">12</span>Organization&middot;Team 생성</div>
+<div class="fi gh"><span class="n">12</span><a href="#st12">Organization&middot;Team 생성</a></div>
 <span class="arrow">&rarr;</span>
-<div class="fi gh"><span class="n">13</span>Billing&middot;Licensing (Copilot 활성화)</div>
+<div class="fi gh"><span class="n">13</span><a href="#st13">Billing and Licensing</a></div>
 <span class="arrow">&rarr;</span>
-<div class="fi gh"><span class="n">14</span>Copilot 초기 정책 설정</div>
+<div class="fi gh"><span class="n">14</span><a href="#st14">Copilot 초기 정책 설정</a></div>
 <span class="arrow">&rarr;</span>
-<div class="fi gh"><span class="n">15</span>Budget 설정</div>
+<div class="fi gh"><span class="n">15</span><a href="#st15">Budget 설정</a></div>
 </div>
 <!-- 2. 사전 준비 -->
 <h2 class="sec" id="s2">2. 사전 준비 (Prerequisites)</h2>
